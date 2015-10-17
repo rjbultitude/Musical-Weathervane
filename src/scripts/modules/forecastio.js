@@ -1,5 +1,9 @@
 module.exports = function() {
 
+	/* 	By Ian Tearle 
+		github.com/iantearle
+	*/
+
 	//Forecast Class
 	function ForecastIOError(errors) {
 		this.errors = errors;
