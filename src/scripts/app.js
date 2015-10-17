@@ -1,5 +1,5 @@
 'use strict';
 
 var getLocations = require('./modules/get-locations');
-
-getLocations();
+//start app
+var locations = getLocations();
