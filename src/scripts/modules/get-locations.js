@@ -34,21 +34,27 @@ module.exports = function() {
     var windSpeedBradfordContainer = document.getElementById('speedBradford');
     var windBearingBradfordContainer = document.getElementById('bearingBradford');
 
-    var locationWindObj = {
-        currentWindSpeedBrixton : conditionBrixton.getWindSpeed(),
-        currentWindBearingBrixton : conditionBrixton.getWindBearing(),
-        currentWindSpeedBirkenhead : conditionBirkenhead.getWindSpeed(),
-        currentWindBearingBirkenhead : conditionBirkenhead.getWindBearing(),
-        currentWindSpeedBradford : conditionBradford.getWindSpeed(),
-        currentWindBearingBradford : conditionBradford.getWindBearing()
-    };
+    var locationWindObj = [
+        {
+            speed : conditionBrixton.getWindSpeed(),
+            bearing : conditionBrixton.getWindBearing()
+        },
+        {
+            speed : conditionBirkenhead.getWindSpeed(),
+            bearing : conditionBirkenhead.getWindBearing()
+        },
+        {
+            speed : conditionBradford.getWindSpeed(),
+            bearing : conditionBradford.getWindBearing()
+        }
+    ];
     
-    windSpeedBrixtonContainer.innerHTML = locationWindObj.currentWindSpeedBrixton;
-    windBearingBrixtonContainer.innerHTML = locationWindObj.currentWindBearingBrixton;
-    windSpeedBirkenheadContainer.innerHTML = locationWindObj.currentWindSpeedBirkenhead;
-    windBearingBirkenheadContainer.innerHTML = locationWindObj.currentWindBearingBirkenhead;
-    windSpeedBradfordContainer.innerHTML = locationWindObj.currentWindSpeedBradford;
-    windBearingBradfordContainer.innerHTML = locationWindObj.currentWindBearingBradford;
+    windSpeedBrixtonContainer.innerHTML = locationWindObj[0].speed;
+    windBearingBrixtonContainer.innerHTML = locationWindObj[0].bearing;
+    windSpeedBirkenheadContainer.innerHTML = locationWindObj[1].speed;
+    windBearingBirkenheadContainer.innerHTML = locationWindObj[1].bearing;
+    windSpeedBradfordContainer.innerHTML = locationWindObj[2].speed;
+    windBearingBradfordContainer.innerHTML = locationWindObj[2].bearing;
 
     return locationWindObj;
 	
