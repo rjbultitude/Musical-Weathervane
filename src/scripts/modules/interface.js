@@ -1,31 +1,38 @@
 'use strict';
 
-var p5 = require('../libs/p5.js');
-//p5.sound = require('/src/scripts/libs/p5.sound');
-//var locationsData = require('./get-locations.js');
+var locationsData = require('./get-locations');
+var P5 = require('../libs/p5');
+require('../libs/p5.sound');
 
 module.exports = function() {
-	var myP5 = new p5(function(sketch) {
+	var myP5 = new P5(function(sketch) {
 
 		var x = 1;
 		var y = 1;
+		var soundTest = null;
 
-		console.log('sketch', sketch);
+		sketch.preload = function() {
+			soundTest = sketch.loadSound('/audio/2note.mp3');
+		};
 
-		function setup() {
+		sketch.setup = function setup() {
 			var myCanvas = sketch.createCanvas(800,600);
 			myCanvas.parent('canvas-container');
 			sketch.background(0,0,0);
-		}
 
-		function draw() {
+			soundTest.setVolume(0.1);
+  			soundTest.play();
+		};
+
+		sketch.draw = function draw() {
 			sketch.background(0, 0, 0);
 			sketch.noStroke();
 			sketch.fill(255);
 			sketch.rect(x, y, 10, 10);
 			x++;
 			y++;
-		}
+		};
+
 	}, 'canvas-container');
 
 	return myP5;
