@@ -1,6 +1,5 @@
 'use strict';
 
-var browserSync     = require('browser-sync');
 var buffer          = require('vinyl-buffer');
 var config          = require('../config');
 var gulp            = require('gulp');
@@ -32,8 +31,7 @@ function bundle() {
         .pipe(buffer())
         .pipe(config.production ? stripDebug() : util.noop())
         .pipe(config.production ? uglify() : util.noop())
-        .pipe(gulp.dest(config.scripts.dist))
-        .pipe(browserSync.reload({ stream: true }));
+        .pipe(gulp.dest(config.scripts.dist));
 }
 
 // Run watchify on update in dev mode

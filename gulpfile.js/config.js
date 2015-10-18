@@ -13,12 +13,6 @@ module.exports = {
             'iOS >= 6'
         ]
     },
-    browserSync: {
-        server: {
-            baseDir: './',
-            proxy: 'zonebpgulp.dev'
-        }
-    },
     production: !!util.env.production,
     sass: {
         errLogToConsole: true

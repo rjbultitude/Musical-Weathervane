@@ -21,7 +21,6 @@
     "browser-sync": "^2.7.12",
     "browserify": "^11.2.0",
     "del": "^2.0.2",
-    "forecast.io": "0.0.9",
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^3.0.2",
     "gulp-jscs": "^3.0.0",

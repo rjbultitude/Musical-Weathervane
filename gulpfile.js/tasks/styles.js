@@ -1,7 +1,6 @@
 'use strict';
 
 var autoprefixer = require('gulp-autoprefixer');
-var browserSync  = require('browser-sync');
 var config       = require('../config');
 var errorHandler = require('../utilities/errorHandler');
 var gulp         = require('gulp');
@@ -21,7 +20,6 @@ gulp.task('styles', function() {
                 .on('error', errorHandler)
         .pipe(config.production ? util.noop() : sourcemaps.write())
         .pipe(config.production ? minifyCss() : util.noop())
-        .pipe(gulp.dest(path.join(config.styles.dist)))
-        .pipe(browserSync.reload({ stream: true }));
+        .pipe(gulp.dest(path.join(config.styles.dist)));
 
 });

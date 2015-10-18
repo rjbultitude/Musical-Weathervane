@@ -1,8 +1,6 @@
 'use strict';
 
-//var request = require('./request');
 var forecastInit = require('./forecastio');
-
 
 module.exports = function() {
 
@@ -35,19 +33,23 @@ module.exports = function() {
     var windBearingBirkenheadContainer = document.getElementById('bearingBirkenhead');
     var windSpeedBradfordContainer = document.getElementById('speedBradford');
     var windBearingBradfordContainer = document.getElementById('bearingBradford');
-    
-    var currentWindSpeedBrixton = conditionBrixton.getWindSpeed();
-    var currentWindBearingBrixton = conditionBrixton.getWindBearing();
-    var currentWindSpeedBirkenhead = conditionBirkenhead.getWindSpeed();
-    var currentWindBearingBirkenhead = conditionBirkenhead.getWindBearing();
-    var currentWindSpeedBradford = conditionBradford.getWindSpeed();
-    var currentWindBearingBradford = conditionBradford.getWindBearing();
 
-    windSpeedBrixtonContainer.innerHTML = currentWindSpeedBrixton;
-    windBearingBrixtonContainer.innerHTML = currentWindBearingBrixton;
-    windSpeedBirkenheadContainer.innerHTML = currentWindSpeedBirkenhead;
-    windBearingBirkenheadContainer.innerHTML = currentWindBearingBirkenhead;
-    windSpeedBradfordContainer.innerHTML = currentWindSpeedBradford;
-    windBearingBradfordContainer.innerHTML = currentWindBearingBradford;
+    var locationWindObj = {
+        currentWindSpeedBrixton : conditionBrixton.getWindSpeed(),
+        currentWindBearingBrixton : conditionBrixton.getWindBearing(),
+        currentWindSpeedBirkenhead : conditionBirkenhead.getWindSpeed(),
+        currentWindBearingBirkenhead : conditionBirkenhead.getWindBearing(),
+        currentWindSpeedBradford : conditionBradford.getWindSpeed(),
+        currentWindBearingBradford : conditionBradford.getWindBearing()
+    };
+    
+    windSpeedBrixtonContainer.innerHTML = locationWindObj.currentWindSpeedBrixton;
+    windBearingBrixtonContainer.innerHTML = locationWindObj.currentWindBearingBrixton;
+    windSpeedBirkenheadContainer.innerHTML = locationWindObj.currentWindSpeedBirkenhead;
+    windBearingBirkenheadContainer.innerHTML = locationWindObj.currentWindBearingBirkenhead;
+    windSpeedBradfordContainer.innerHTML = locationWindObj.currentWindSpeedBradford;
+    windBearingBradfordContainer.innerHTML = locationWindObj.currentWindBearingBradford;
+
+    return locationWindObj;
 	
 };

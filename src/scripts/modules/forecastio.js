@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function() {
 
 	/* 	By Ian Tearle 
@@ -5,19 +7,14 @@ module.exports = function() {
 	*/
 
 	//Forecast Class
-	function ForecastIOError(errors) {
-		this.errors = errors;
-	}
 
 	function ForecastIO(config) {
-		PROXY_SCRIPT = '/proxy.php';
+		//var PROXY_SCRIPT = '/proxy.php';
 		if(!config) { 
-			//throw new ForecastIOError('You must pass ForecastIO configurations');
 			console.log('You must pass ForecastIO configurations');
 		}
 		if(!config.PROXY_SCRIPT) {
 			if(!config.API_KEY) {
-				//throw new ForecastIOError('API_KEY or PROXY_SCRIPT must be set in ForecastIO config');
 				console.log('API_KEY or PROXY_SCRIPT must be set in ForecastIO config');
 			}
 		}
@@ -26,8 +23,9 @@ module.exports = function() {
 	}
 
 	ForecastIO.prototype.requestData = function requestData(latitude, longitude) {
-		request_url = this.url + '?url=' + latitude + ',' + longitude + '?units=auto';
+		var request_url = this.url + '?url=' + latitude + ',' + longitude + '?units=auto';
 		var xhr = new XMLHttpRequest();
+		var content = null;
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState === 4 && xhr.status === 200) {
 		        content = xhr.responseText;
@@ -96,11 +94,12 @@ module.exports = function() {
 		 * @return String
 		 */
 		this.getTime = function(format) {
-			if(!format) {
-				return raw_data.time;
-			} else {
-				return moment.unix(raw_data.time).format(format);
-			}
+			format = null;
+			// if(!format) {
+			// 	return raw_data.time;
+			// } else {
+			// 	return moment.unix(raw_data.time).format(format);
+			// }
 		};
 		/**
 		 * Get the pressure
@@ -225,4 +224,4 @@ module.exports = function() {
 	}
 
 	return ForecastIO;
-}
+};
