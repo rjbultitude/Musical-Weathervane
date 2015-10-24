@@ -30,17 +30,20 @@ module.exports = function() {
 				organNotes[num].loop();
 
 				//bearing
+				//In degrees
 				var thisBearing = locationsData[num].bearing;
-				var volume = sketch.map(thisBearing, 0, 100, 0, 1);
-  				volume = sketch.constrain(volume, 0.5, 1);
+				var pitch = sketch.map(thisBearing, 0, 360, 0.1, 2.0);
+  				//pitch = sketch.constrain(pitch, 0.5, 1);
+  				console.log('pitch', pitch);
   				
   				//speed
-  				var thisSpeed = locationsData[num].bearing;
-				var speed = sketch.map(thisSpeed, 0.1, 100, 0, 2);
-				speed = sketch.constrain(speed, 0.01, 4);
-				console.log('speed', speed);
+  				//Typically between 0 & 32 m/s
+  				var thisSpeed = Math.round(locationsData[num].speed);
+				var volume = sketch.map(thisSpeed, 0, 32, 0.4, 1.0);
+				//volume = sketch.constrain(speed, 0.01, 4);
+				console.log('volume', volume);
   				organNotes[i].amp(volume);
-				organNotes[i].rate(speed);
+				organNotes[i].rate(pitch);
 				num++;
 			}
 			
@@ -50,8 +53,6 @@ module.exports = function() {
 			sketch.background(0, 0, 0);
 			sketch.noStroke();
 			sketch.fill(255);
-			sketch.rect(sketch.mouseX, sketch.mouseY, 10, 10);
-			
 		};
 
 	}, 'canvas-container');
