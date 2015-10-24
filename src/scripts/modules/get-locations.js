@@ -2,25 +2,27 @@
 
 var forecastInit = require('./forecastio');
 
+
 module.exports = function() {
 
-	var locations = {
-		brixton: {
-			latitude: '51.461279',
-			longitude: '-0.115615'
-		},
-		birkenhead: {
-			latitude: '53.389991',
-			longitude: '-3.023009'
-		},
-		bradford: {
-			latitude: '53.795984',
-			longitude: '-1.759398'
-		}
-	};
+    var locations = {
+        brixton: {
+            latitude: '51.461279',
+            longitude: '-0.115615'
+        },
+        birkenhead: {
+            latitude: '53.389991',
+            longitude: '-3.023009'
+        },
+        bradford: {
+            latitude: '53.795984',
+            longitude: '-1.759398'
+        }
+    };
 
-	var Forecastio = forecastInit();
-	var forecast = new Forecastio({PROXY_SCRIPT: '/proxy.php'});
+    var Forecastio = forecastInit();
+    var forecast = new Forecastio({PROXY_SCRIPT: '/proxy.php'});
+    console.log('The API is being called! ', forecast);
 
 	//get current conditions
     var conditionBrixton = forecast.getCurrentConditions(locations.brixton.latitude, locations.brixton.longitude);

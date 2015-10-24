@@ -1,7 +1,5 @@
 'use strict';
 
-var getLocations = require('./modules/get-locations');
 var interfaceInit = require('./modules/interface');
 //start app
-getLocations();
-interfaceInit();
+var what = interfaceInit();

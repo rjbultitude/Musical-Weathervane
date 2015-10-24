@@ -32,6 +32,7 @@
             <span id="speedBradford"></span>
             <span id="bearingBradford"></span>
         </p>
+        <button id="load">Load New Data</button>
         <script src="dist/scripts/app.js"></script>
     </body>
 </html>
