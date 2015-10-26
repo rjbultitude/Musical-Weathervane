@@ -8,12 +8,6 @@ require('../libs/p5.sound');
 
 module.exports = function() {
 
-	var loadNewDataBtn = document.getElementById('load');
-	loadNewDataBtn.addEventListener('click', function() {
-		var newLocationsData = getLocations();
-		newLocations(newLocationsData);
-	});
-
 	var loadJSON = loadJSONFn();
 
 	loadJSON('/data/static-data.json',
@@ -44,27 +38,31 @@ module.exports = function() {
 				}
 			};
 
-			function mapPlaySounds(newLocations) {
+			function initBtn() {
+				var loadNewDataBtn = document.getElementById('load');
+				loadNewDataBtn.addEventListener('click', function() {
+					var newLocationsData = getLocations();
+					mapPlayCurrNew(newLocationsData);
+				});
+			}
+
+			function mapPlaySounds(currLocations) {
+				if (currLocations === undefined) {
+					console.log('No data passed in');
+				}
 				var num = 0;
-				var theData = null;
-				if (newLocations === undefined) {
-					theData = locationsData;
-				}
-				else {
-					theData = newLocations;
-				}
-				for (var i in theData) {
+				for (var i in currLocations) {
 					organNotes[num].loop();
 
 					//Wind Bearing
 					//In degrees
-					var thisBearing = theData[num].bearing;
+					var thisBearing = currLocations[num].bearing;
 					var pitch = sketch.map(thisBearing, 0, 360, 0.1, 2.0);
 	  				console.log('pitch', pitch);
 	  				
 	  				//Wind Speed
 	  				//Typically between 0 & 32 m/s
-	  				var thisSpeed = Math.round(theData[num].speed);
+	  				var thisSpeed = Math.round(currLocations[num].speed);
 					var volume = sketch.map(thisSpeed, 0, 32, 0.4, 1.0);
 					console.log('volume', volume);
 	  				organNotes[i].amp(volume);
@@ -73,16 +71,33 @@ module.exports = function() {
 				}
 			}
 
-			function newLocations(data) {
-				return data;
+			function mapPlayCurrNew(currLocations, newLocations) {
+				var num = 0;
+				//loop through locations
+				for (var note in organNotes) {
+					//compare bearings
+					var thisBearing = currLocations[num].bearing;
+					var thatBearing = newLocations[num].bearing;
+					var newPitch = sketch.map(thisBearing, 0, 360, 0.1, 2.0);
+					if (thisBearing !== thatBearing) {
+						var bearingDiff = thisBearing - thatBearing;
+						var bearingInc = bearingDiff / 0.2;
+						for (var i = bearingInc - 1; i >= 0; i--) {
+							organNotes[i].rate(newPitch);
+							newPitch += 0.2;
+						}
+					}
+				}
+				num ++;
 			}
 
 			sketch.setup = function setup() {
-				var myCanvas = sketch.createCanvas(800,600);
+				var myCanvas = sketch.createCanvas(800,200);
 				myCanvas.parent('canvas-container');
 				sketch.background(0,0,0);
 				//init sounds
-				mapPlaySounds();
+				mapPlaySounds(newData);
+				initBtn();
 				
 			};
 
@@ -90,11 +105,6 @@ module.exports = function() {
 				sketch.background(0, 0, 0);
 				sketch.noStroke();
 				sketch.fill(255);
-
-				if(newLocations() !== undefined ) {
-					mapPlaySounds(newLocations());
-				}
-
 			};
 
 		}, 'canvas-container');
