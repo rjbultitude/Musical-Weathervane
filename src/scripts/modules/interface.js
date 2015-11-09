@@ -28,14 +28,18 @@ module.exports = function() {
 		var myP5 = new P5(function(sketch) {
 
 			//The rate at which to detune
-			var incAmt = 0.02;
+			var factor = 200000;
 
+			//add sounds to locactions object when ready
 			sketch.preload = function() {
 				for (var loc in locationsData) {
+					//loadSound called during preload
+					//will be ready to play in time for setup
 					locationsData[loc].sound = sketch.loadSound('/audio/organ-C2.mp3');
 				}
 			};
 
+			//Initialise load new data button 
 			function initBtn() {
 				var loadNewDataBtn = document.getElementById('load');
 				loadNewDataBtn.addEventListener('click', function() {
@@ -61,14 +65,12 @@ module.exports = function() {
 					//Wind Bearing
 					//In degrees
 					locationsData[loc].pitch = sketch.map(locationsData[loc].bearing, 0, 360, 0.1, 2.0);
-	  				//console.log('pitch', pitch);
 	  				
 	  				//Wind Speed
 	  				//Typically between 0 & 32 m/s
 					locationsData[loc].volume = sketch.map(Math.round(locationsData[loc].speed), 0, 32, 0.4, 1.0);
-					//console.log('volume', volume);
-					//
-	  				locationsData[loc].sound.amp(locationsData[loc].volume);
+	  				//locationsData[loc].sound.amp(locationsData[loc].volume);
+	  				locationsData[loc].sound.amp(1);
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
 				}
 			}
@@ -89,45 +91,50 @@ module.exports = function() {
 					locationsData[loc].newBearing = newData[loc].bearing;
 					locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, 0, 360, 0.1, 2.0);
 					locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
-					locationsData[loc].incAmt = locationsData[loc].pitchDiff / 12;
+					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
 				}
 				//once calculations are complete retune
 				tunePitch();
 			}
 
 			function tunePitch() {
+				var numKeys = Object.keys(locationsData).length;
+				var loopNum = numKeys * factor;
+				var loc = 0;
 				dataLoop:
-				for (var loc in locationsData) {
-					var loopCount = 0;
-					//if current and new match move to the next location
+				for (var i = 0; i < loopNum; i++) {
+					//Pitch tune logic
 					if (locationsData[loc].pitch === locationsData[loc].newPitch) {
-						continue dataLoop;
-					}
-					else {
-						//Pitch tune loops
-						posLoop:
-						while (locationsData[loc].newPitch > locationsData[loc].pitch) {
-							locationsData[loc].sound.rate(locationsData[loc].pitch);
-							locationsData[loc].pitch += locationsData[loc].incAmt;
-							console.log('add', locationsData[loc].pitch);
-							loopCount++;
+						console.log('' + loc + ' is same');
+						if (loc < numKeys -1) {
+							loc++;
+							//if current pitch and new pitch match move to the next location
 							continue dataLoop;
-							//break;
 						}
-						negLoop:
-						while (locationsData[loc].newPitch < locationsData[loc].pitch) {
-							locationsData[loc].sound.rate(locationsData[loc].pitch);
-							locationsData[loc].pitch -= locationsData[loc].incAmt;
-							console.log('subtract', locationsData[loc].pitch);
-							loopCount++;
-							continue dataLoop;
-							//break;
+						else {
+							//if all have been checked then stop
+							break;
 						}
-						console.log('loopCount', loopCount);
 					}
-					console.log('loc ' + loc + ' done');
-					console.log('d', locationsData[loc]);
+					else if (locationsData[loc].newPitch > locationsData[loc].pitch) {
+						locationsData[loc].pitch += locationsData[loc].incAmt;
+						//console.log('add', locationsData[loc].pitch);
+					}
+					else if (locationsData[loc].newPitch < locationsData[loc].pitch) {
+						locationsData[loc].pitch -= locationsData[loc].incAmt;
+						//console.log('subtract', locationsData[loc].pitch);
+					}
+					//Set new pitch
+					locationsData[loc].sound.rate(locationsData[loc].pitch);
+					//Move to next loc obj
+					loc++;
+					//Loop through loc objects array again
+					if (loc === Object.keys(locationsData).length) {
+						loc = 0;
+					}
+					//console.log('loc ' + loc + ' done');
 				}
+				console.log('d', locationsData);
 			}
 
 			sketch.setup = function setup() {

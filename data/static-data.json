@@ -1,10 +1,10 @@
 [{
 	"speed": 5.01,
-	"bearing": 45
-}, {
-	"speed": 15.8,
 	"bearing": 120
 }, {
+	"speed": 15.8,
+	"bearing": 150
+}, {
 	"speed": 13.41,
-	"bearing": 270
+	"bearing": 180
 }]
