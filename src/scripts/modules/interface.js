@@ -90,10 +90,13 @@ module.exports = function() {
 					//compare bearings
 					locationsData[loc].newBearing = newData[loc].bearing;
 					locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, 0, 360, 0.1, 2.0);
+					//calculate fifference 
+					//to inform increment for this location
+					//and ensure it's a positive number
 					locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
 					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
 				}
-				//once calculations are complete retune
+				//once calculations are complete: retune
 				tunePitch();
 			}
 
