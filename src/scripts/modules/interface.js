@@ -1,3 +1,17 @@
+/*
+	This module loads and converts the data
+	Three locations are used as the data sources
+
+	Each location's properties are used to inform the shape of the sounds
+	Wind bearing is mapped to used for the pitch
+	Wind speed for volume
+	
+	When new data is loaded the pitch of each note is retuned
+	This is done by ensuring the loop is re-entered after each pass of all three objects
+	However it relies on a for loop, which is run at the speed of the client's computer
+	This flaw needs addressing
+ */
+
 'use strict';
 
 var	getLocations = require('./get-locations');
