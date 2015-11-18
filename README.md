@@ -4,8 +4,9 @@
 
 	.
 	├── dist               (created and managed by Gulp)
+	├── audio
 	├── fonts
-	├── images
+	├── img
 	├── node_modules       (created and managed by NPM)
 	├── src
 	│   ├── scripts

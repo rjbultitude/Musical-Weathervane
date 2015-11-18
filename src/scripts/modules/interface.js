@@ -15,7 +15,6 @@
 'use strict';
 
 var	getLocations = require('./get-locations');
-var locationsData = null;
 var loadJSONFn = require('./load-json');
 var P5 = require('../libs/p5');
 require('../libs/p5.sound');
@@ -23,6 +22,8 @@ require('../libs/p5.sound');
 module.exports = function() {
 	//load JSON parser/loader
 	var loadJSON = loadJSONFn();
+	//Frequency of data polling
+	var pollInterval = 10000;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -36,7 +37,7 @@ module.exports = function() {
 
 	//main app init
 	function init(newData) {
-		locationsData = newData;
+		var locationsData = newData;
 		localStorage.setItem('locationsData' , locationsData);
 
 		var myP5 = new P5(function(sketch) {
@@ -53,20 +54,32 @@ module.exports = function() {
 				}
 			};
 
-			//Initialise load new data button 
-			function initBtn() {
-				var loadNewDataBtn = document.getElementById('load');
-				loadNewDataBtn.addEventListener('click', function() {
+			function pollForecast() {
+				//For testing / debugging
+				//setTimeout(function() {
+				setInterval(function() {
+					var dataMatch = false;
+					var newLocationsData = getLocations();
 
-					loadJSON('/data/static-data2.json',
-					function(data) {
-						//var newLocationsData = getLocations();
-						compareData(data);
-					},
-					function(status) {
-						console.log('there was an error: ' + status);
-					});
-				});
+					dataCheckLoop:
+					for (var newLoc in newLocationsData) {
+						for (var loc in locationsData) {
+							//If any bearing data is different then break
+							//Only compare bearing data for now
+							if (newLocationsData[newLoc].bearing !== locationsData[loc].bearing) {
+								dataMatch = false;
+								break;
+							}
+							else {
+								dataMatch = true;
+								continue dataCheckLoop;
+							}
+						}
+					}
+					if (dataMatch === false) {
+						compareData(newLocationsData);
+					}
+				}, pollInterval);
 			}
 
 			function mapPlaySounds() {
@@ -118,6 +131,7 @@ module.exports = function() {
 				var numKeys = Object.keys(locationsData).length;
 				var loopNum = numKeys * factor;
 				var loc = 0;
+
 				dataLoop:
 				for (var i = 0; i < loopNum; i++) {
 					//Pitch tune logic
@@ -135,33 +149,41 @@ module.exports = function() {
 					}
 					else if (locationsData[loc].newPitch > locationsData[loc].pitch) {
 						locationsData[loc].pitch += locationsData[loc].incAmt;
-						//console.log('add', locationsData[loc].pitch);
 					}
 					else if (locationsData[loc].newPitch < locationsData[loc].pitch) {
 						locationsData[loc].pitch -= locationsData[loc].incAmt;
-						//console.log('subtract', locationsData[loc].pitch);
 					}
 					//Set new pitch
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
+
 					//Move to next loc obj
 					loc++;
+					
 					//Loop through loc objects array again
 					if (loc === Object.keys(locationsData).length) {
 						loc = 0;
 					}
-					//console.log('loc ' + loc + ' done');
 				}
-				console.log('d', locationsData);
+				//Overwrite bearing and speed
+				overwriteLocData();
+			}
+
+			function overwriteLocData() {
+				for (var loc in locationsData) {
+					//locationsData[loc].speed = locationsData[loc].newSpeed;
+					locationsData[loc].bearing = locationsData[loc].newBearing;
+				}
 			}
 
 			sketch.setup = function setup() {
+				//Canvas setup
 				var myCanvas = sketch.createCanvas(800,200);
 				myCanvas.parent('canvas-container');
 				sketch.background(0,0,0);
 				//init sounds
 				mapPlaySounds();
-				initBtn();
-				//setInterval(compareData, 5000);
+				//initBtn();
+				pollForecast();
 				
 			};
 

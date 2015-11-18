@@ -50,13 +50,18 @@ module.exports = function() {
             bearing : conditionBradford.getWindBearing()
         }
     ];
-    
-    windSpeedBrixtonContainer.innerHTML = locationWindObj[0].speed;
-    windBearingBrixtonContainer.innerHTML = locationWindObj[0].bearing;
-    windSpeedBirkenheadContainer.innerHTML = locationWindObj[1].speed;
-    windBearingBirkenheadContainer.innerHTML = locationWindObj[1].bearing;
-    windSpeedBradfordContainer.innerHTML = locationWindObj[2].speed;
-    windBearingBradfordContainer.innerHTML = locationWindObj[2].bearing;
+
+    //For testing and debugging
+    function outputDatatoPage() {
+        windSpeedBrixtonContainer.innerHTML = locationWindObj[0].speed;
+        windBearingBrixtonContainer.innerHTML = locationWindObj[0].bearing;
+        windSpeedBirkenheadContainer.innerHTML = locationWindObj[1].speed;
+        windBearingBirkenheadContainer.innerHTML = locationWindObj[1].bearing;
+        windSpeedBradfordContainer.innerHTML = locationWindObj[2].speed;
+        windBearingBradfordContainer.innerHTML = locationWindObj[2].bearing;
+    }
+
+    //outputDatatoPage();
 
     return locationWindObj;
 	
