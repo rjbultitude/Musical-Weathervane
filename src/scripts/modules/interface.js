@@ -23,7 +23,7 @@ module.exports = function() {
 	//load JSON parser/loader
 	var loadJSON = loadJSONFn();
 	//Frequency of data polling
-	var pollInterval = 10000;
+	var pollInterval = 1500;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -56,10 +56,11 @@ module.exports = function() {
 
 			function pollForecast() {
 				//For testing / debugging
-				//setTimeout(function() {
-				setInterval(function() {
+				setTimeout(function() {
+				//setInterval(function() {
 					var dataMatch = false;
 					var newLocationsData = getLocations();
+					console.log('newLocationsData', newLocationsData);
 
 					dataCheckLoop:
 					for (var newLoc in newLocationsData) {
@@ -100,6 +101,8 @@ module.exports = function() {
 	  				locationsData[loc].sound.amp(1);
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
 				}
+				//Poll for 1st time
+				pollForecast();
 			}
 
 			function compareData(newData) {
@@ -173,6 +176,9 @@ module.exports = function() {
 					//locationsData[loc].speed = locationsData[loc].newSpeed;
 					locationsData[loc].bearing = locationsData[loc].newBearing;
 				}
+				//Once data has been overwritten
+				//poll again
+				pollForecast();
 			}
 
 			sketch.setup = function setup() {
@@ -181,10 +187,8 @@ module.exports = function() {
 				myCanvas.parent('canvas-container');
 				sketch.background(0,0,0);
 				//init sounds
+				//Must only be called once
 				mapPlaySounds();
-				//initBtn();
-				pollForecast();
-				
 			};
 
 			sketch.draw = function draw() {

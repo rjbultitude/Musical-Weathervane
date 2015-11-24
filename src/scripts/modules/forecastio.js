@@ -8,7 +8,7 @@ module.exports = function() {
 
 	//Forecast Class
 
-	function ForecastIO(config) {
+	function ForecastIO(config, start) {
 		//var PROXY_SCRIPT = '/proxy.php';
 		if(!config) { 
 			console.log('You must pass ForecastIO configurations');
@@ -19,28 +19,29 @@ module.exports = function() {
 			}
 		}
 		this.API_KEY = config.API_KEY;
-		this.url = (typeof config.PROXY_SCRIPT !== 'undefined') ? config.PROXY_SCRIPT : 'https://api.forecast.io/forecast/' + config.API_KEY + '/';  
+		this.url = (typeof config.PROXY_SCRIPT !== 'undefined') ? config.PROXY_SCRIPT : 'https://api.forecast.io/forecast/' + config.API_KEY + '/';
 	}
 
-	ForecastIO.prototype.requestData = function requestData(latitude, longitude) {
+	ForecastIO.prototype.requestData = function requestData(latitude, longitude, ready) {
 		var request_url = this.url + '?url=' + latitude + ',' + longitude + '?units=auto';
 		var xhr = new XMLHttpRequest();
 		var content = null;
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState === 4 && xhr.status === 200) {
 		        content = xhr.responseText;
-		        //console.log('content', content);
+		        ready(JSON.parse(content));
 	        }
 		};
-		xhr.open('GET', request_url, false);
+		xhr.open('GET', request_url, true);
 		xhr.send();
-
-	    if(content !== '' && (content)) {
-	    	//console.log('content', content);
-			return JSON.parse(content);
-		} else {
-			return false;
-		}
+	 //    if(content !== '' && (content)) {
+	 //    	//console.log('content', content);
+		// 	return JSON.parse(content);
+		// } 
+		// else {
+		// 	console.log('there was a problem getting the weather data');
+		// 	return false;
+		// }
 	};
 
 	/**
@@ -50,13 +51,15 @@ module.exports = function() {
 	 * @param float $longitude
 	 * @return \ForecastIOConditions|boolean
 	 */
-	ForecastIO.prototype.getCurrentConditions = function getCurrentConditions(latitude, longitude) {
-		var data = this.requestData(latitude, longitude);
-		if(data !== false) {
-			return new ForecastIOConditions(data.currently);
-		} else {
-			return false;
-		}
+	ForecastIO.prototype.getCurrentConditions = function getCurrentConditions(latitude, longitude, ready) {
+		var data = this.requestData(latitude, longitude, ready);
+		console.log(data);
+		// if(data !== false) {
+		// 	return new ForecastIOConditions(data.currently);
+		// } 
+		// else {
+		// 	return false;
+		// }
 	};
 
 	function ForecastIOConditions(raw_data) {
