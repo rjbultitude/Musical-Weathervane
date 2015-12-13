@@ -1,6 +1,8 @@
 'use strict';
 
 var forecastInit = require('./forecastio');
+var when = require('when');
+var rest = require('rest');
 
 module.exports = function() {
 

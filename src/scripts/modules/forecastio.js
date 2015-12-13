@@ -38,7 +38,7 @@ module.exports = function() {
 		        //ready(JSON.parse(content));
 		        var contentJSON = JSON.parse(content);
 		        var currData = new ForecastIOConditions(contentJSON.currently);
-		        console.log('currData', currData);
+		        //console.log('currData', currData);
 		        ready(currData);
             }
 	        else {
