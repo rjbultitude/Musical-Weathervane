@@ -59,8 +59,9 @@ module.exports = function() {
 				setTimeout(function() {
 				//setInterval(function() {
 					var dataMatch = false;
+					//TODO
+					//This needs to be handled asychronously
 					var newLocationsData = getLocations();
-					console.log('newLocationsData', newLocationsData);
 
 					dataCheckLoop:
 					for (var newLoc in newLocationsData) {

@@ -2,7 +2,6 @@
 
 var forecastInit = require('./forecastio');
 
-
 module.exports = function() {
 
 	var locationWindObj = [];
@@ -24,11 +23,10 @@ module.exports = function() {
 
 	function ready(dataJOSN) {
 		var tempObj = {
-			bearing: dataJOSN.currently.windBearing, 
-			speed: dataJOSN.currently.windSpeed
+			bearing: dataJOSN.getWindSpeed(), 
+			speed: dataJOSN.getWindBearing()
 		};
 		locationWindObj.push(tempObj);
-		console.log('locationWindObj', locationWindObj);
 	}
 
 	var Forecastio = forecastInit();
@@ -39,7 +37,9 @@ module.exports = function() {
 	for (var loc in locations) {
 		forecast.getCurrentConditions(locations[loc].latitude, locations[loc].longitude, ready);
 	}
-	console.log('locationWindObj', locationWindObj);
-	return locationWindObj;
-	//return forecast;
+	//TODO
+	//This needs to be handled asychronously
+	if (locationWindObj.length === Object.keys(locations).length) {
+		return locationWindObj;
+	}
 };

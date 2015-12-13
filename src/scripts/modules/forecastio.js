@@ -27,21 +27,27 @@ module.exports = function() {
 		var xhr = new XMLHttpRequest();
 		var content = null;
 		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4 && xhr.status === 200) {
+			if(xhr.readyState < 4) {
+                return;
+            }
+            if(xhr.status !== 200) {
+                return;
+            }
+            if(xhr.readyState === 4) {
 		        content = xhr.responseText;
-		        ready(JSON.parse(content));
+		        //ready(JSON.parse(content));
+		        var contentJSON = JSON.parse(content);
+		        var currData = new ForecastIOConditions(contentJSON.currently);
+		        console.log('currData', currData);
+		        ready(currData);
+            }
+	        else {
+				console.log('there was a problem getting the weather data. Status: ' + xhr.status + ' State: ' + xhr.readyState);
+				return false;
 	        }
 		};
 		xhr.open('GET', request_url, true);
 		xhr.send();
-	 //    if(content !== '' && (content)) {
-	 //    	//console.log('content', content);
-		// 	return JSON.parse(content);
-		// } 
-		// else {
-		// 	console.log('there was a problem getting the weather data');
-		// 	return false;
-		// }
 	};
 
 	/**
@@ -53,13 +59,6 @@ module.exports = function() {
 	 */
 	ForecastIO.prototype.getCurrentConditions = function getCurrentConditions(latitude, longitude, ready) {
 		var data = this.requestData(latitude, longitude, ready);
-		console.log(data);
-		// if(data !== false) {
-		// 	return new ForecastIOConditions(data.currently);
-		// } 
-		// else {
-		// 	return false;
-		// }
 	};
 
 	function ForecastIOConditions(raw_data) {
