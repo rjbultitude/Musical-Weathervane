@@ -1,6 +1,6 @@
 'use strict';
 
-var forecastInit = require('./forecastio');
+var Forecastio = require('./forecastio');
 var when = require('when');
 var rest = require('rest');
 
@@ -30,11 +30,11 @@ module.exports = function() {
 		};
 		locationWindObj.push(tempObj);
 	}
-
-	var Forecastio = forecastInit();
-	var forecast = new Forecastio({
+	var forecast;
+	forecast = new Forecastio({
 		PROXY_SCRIPT: '/proxy.php'
 	});
+	console.log('forecast', forecast);
 	//init();
 	for (var loc in locations) {
 		forecast.getCurrentConditions(locations[loc].latitude, locations[loc].longitude, ready);

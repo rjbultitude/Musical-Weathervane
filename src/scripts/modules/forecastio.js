@@ -1,15 +1,32 @@
 'use strict';
 
-module.exports = function() {
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory();
+    } else {
+        // Browser globals (root is window)
+        root.returnExports = factory();
+  }
+}(this, function () {
 
 	/* 	By Ian Tearle 
 		github.com/iantearle
+		Forked and amended by
+		Richard Bultitude
+		github.com/rjbultitude
 	*/
 
 	//Forecast Class
 
-	function ForecastIO(config, start) {
+	function ForecastIO(config) {
 		//var PROXY_SCRIPT = '/proxy.php';
+		console.log('config', config);
 		if(!config) { 
 			console.log('You must pass ForecastIO configurations');
 		}
@@ -22,6 +39,7 @@ module.exports = function() {
 		this.url = (typeof config.PROXY_SCRIPT !== 'undefined') ? config.PROXY_SCRIPT : 'https://api.forecast.io/forecast/' + config.API_KEY + '/';
 	}
 
+	//Request data method with added callback
 	ForecastIO.prototype.requestData = function requestData(latitude, longitude, ready) {
 		var request_url = this.url + '?url=' + latitude + ',' + longitude + '?units=auto';
 		var xhr = new XMLHttpRequest();
@@ -226,4 +244,4 @@ module.exports = function() {
 	}
 
 	return ForecastIO;
-};
+}));
