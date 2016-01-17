@@ -23,7 +23,7 @@ module.exports = function() {
 	//load JSON parser/loader
 	var loadJSON = loadJSONFn();
 	//Frequency of data polling
-	var pollInterval = 1500;
+	var pollInterval = 2500;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -184,7 +184,8 @@ module.exports = function() {
 				}
 				//Once data has been overwritten
 				//poll again
-				pollForecast();
+				//recursion!
+				//pollForecast();
 			}
 
 			sketch.setup = function setup() {
