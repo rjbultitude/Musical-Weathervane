@@ -43,6 +43,8 @@ module.exports = function() {
 		var myP5 = new P5(function(sketch) {
 
 			//The rate at which to detune
+			//Needs to be refactored to be
+			//independant of the processor speed
 			var factor = 200000;
 
 			//add sounds to locactions object when ready
@@ -55,32 +57,33 @@ module.exports = function() {
 			};
 
 			function pollForecast() {
-				//For testing / debugging
+				//timeOut for dev mode
+				//setInterval for prod
 				setTimeout(function() {
 				//setInterval(function() {
 					var dataMatch = false;
-					//TODO
-					//This needs to be handled asychronously
-					var newLocationsData = getLocations();
-
-					dataCheckLoop:
-					for (var newLoc in newLocationsData) {
-						for (var loc in locationsData) {
-							//If any bearing data is different then break
-							//Only compare bearing data for now
-							if (newLocationsData[newLoc].bearing !== locationsData[loc].bearing) {
-								dataMatch = false;
-								break;
-							}
-							else {
-								dataMatch = true;
-								continue dataCheckLoop;
+					//This is now asychronous
+					getLocations(function(locsData) {
+						console.log('locsData', locsData);
+						dataCheckLoop:
+						for (var newLoc in locsData) {
+							for (var loc in locationsData) {
+								//If any bearing data is different then break
+								//Only compare bearing data for now
+								if (locsData[newLoc].bearing !== locationsData[loc].bearing) {
+									dataMatch = false;
+									break;
+								}
+								else {
+									dataMatch = true;
+									continue dataCheckLoop;
+								}
 							}
 						}
-					}
-					if (dataMatch === false) {
-						compareData(newLocationsData);
-					}
+						if (dataMatch === false) {
+							compareData(locsData);
+						}
+					});
 				}, pollInterval);
 			}
 
@@ -153,9 +156,11 @@ module.exports = function() {
 					}
 					else if (locationsData[loc].newPitch > locationsData[loc].pitch) {
 						locationsData[loc].pitch += locationsData[loc].incAmt;
+						//animation increase here
 					}
 					else if (locationsData[loc].newPitch < locationsData[loc].pitch) {
 						locationsData[loc].pitch -= locationsData[loc].incAmt;
+						//animation increase here
 					}
 					//Set new pitch
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
