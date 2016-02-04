@@ -12,6 +12,10 @@
 	This flaw needs addressing
  */
 
+/*
+	Location Harminiser
+ */
+
 'use strict';
 
 var	getLocations = require('./get-locations');
@@ -23,11 +27,12 @@ module.exports = function() {
 	//load JSON parser/loader
 	var loadJSON = loadJSONFn();
 	//Frequency of data polling
-	var pollInterval = 2500;
+	var pollInterval = 36000; //0.01 hours
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
 		function(data) {
+			console.log('data', data);
 			//init app here
 			init(data);
 		},
@@ -38,7 +43,10 @@ module.exports = function() {
 	//main app init
 	function init(newData) {
 		var locationsData = newData;
-		localStorage.setItem('locationsData' , locationsData);
+		var numKeys = Object.keys(locationsData).length;
+		console.log('locationsData', locationsData);
+		//TODO store offline
+		//localStorage.setItem('locationsData' , locationsData);
 
 		var myP5 = new P5(function(sketch) {
 
@@ -46,6 +54,8 @@ module.exports = function() {
 			//Needs to be refactored to be
 			//independant of the processor speed
 			var factor = 200000;
+			//Arrays for Objects
+			var locationShapes = [];
 
 			//add sounds to locactions object when ready
 			sketch.preload = function() {
@@ -59,12 +69,11 @@ module.exports = function() {
 			function pollForecast() {
 				//timeOut for dev mode
 				//setInterval for prod
-				setTimeout(function() {
-				//setInterval(function() {
+				//setTimeout(function() {
+				setInterval(function() {
 					var dataMatch = false;
 					//This is now asychronous
 					getLocations(function(locsData) {
-						console.log('locsData', locsData);
 						dataCheckLoop:
 						for (var newLoc in locsData) {
 							for (var loc in locationsData) {
@@ -97,10 +106,12 @@ module.exports = function() {
 					//Wind Bearing
 					//In degrees
 					locationsData[loc].pitch = sketch.map(locationsData[loc].bearing, 0, 360, 0.1, 2.0);
+					locationsData[loc].angle = locationsData[loc].bearing;
 	  				
 	  				//Wind Speed
 	  				//Typically between 0 & 32 m/s
 					locationsData[loc].volume = sketch.map(Math.round(locationsData[loc].speed), 0, 32, 0.4, 1.0);
+					locationsData[loc].radius = sketch.map(Math.round(locationsData[loc].speed), 0, 32, 20, 90);
 	  				//locationsData[loc].sound.amp(locationsData[loc].volume);
 	  				locationsData[loc].sound.amp(1);
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
@@ -135,7 +146,6 @@ module.exports = function() {
 			}
 
 			function tunePitch() {
-				var numKeys = Object.keys(locationsData).length;
 				var loopNum = numKeys * factor;
 				var loc = 0;
 
@@ -182,11 +192,21 @@ module.exports = function() {
 					//locationsData[loc].speed = locationsData[loc].newSpeed;
 					locationsData[loc].bearing = locationsData[loc].newBearing;
 				}
-				//Once data has been overwritten
-				//poll again
-				//recursion!
-				//pollForecast();
 			}
+
+			function LocationShape(xPos, yPos, radius) {
+				this.xPos = xPos;
+				this.yPos = yPos;
+				this.radius = radius;
+			}
+
+			LocationShape.prototype.draw = function(newRadius, name) {
+				sketch.fill(255,255,255);
+				sketch.ellipse(this.xPos, this.yPos, newRadius, newRadius);
+				sketch.textSize(18);
+				//console.log('name', name);
+				sketch.text('name', this.xPos, this.yPos - 80);
+			};
 
 			sketch.setup = function setup() {
 				//Canvas setup
@@ -196,12 +216,22 @@ module.exports = function() {
 				//init sounds
 				//Must only be called once
 				mapPlaySounds();
+				//Visuals
+				for (var i = 0; i < numKeys; i++) {
+					var third = sketch.width/3;
+					var newLocationShape = new LocationShape(third * i, sketch.height/2, 70);
+					locationShapes.push(newLocationShape);
+				}
 			};
 
 			sketch.draw = function draw() {
 				sketch.background(0, 0, 0);
 				sketch.noStroke();
 				sketch.fill(255);
+
+				for (var i = 0; i < locationShapes.length; i++) {
+					locationShapes[i].draw(locationsData[i].radius, locationsData[i].name);
+				}
 			};
 
 		}, 'canvas-container');

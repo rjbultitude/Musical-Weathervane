@@ -2,7 +2,7 @@
 
 module.exports = function () {
 
-	var loadJSON = function(file, callback, asynch) {
+	var loadJSON = function(file, callback, errorCallback) {
 		var xhr = new XMLHttpRequest();
 		xhr.callback = callback;
 		if (xhr.overrideMimeType) {
@@ -11,7 +11,7 @@ module.exports = function () {
 		xhr.ontimeout = function() {
 			console.error('The request for ' + file + ' timed out.');
 		};
-		xhr.open('GET', file, asynch);
+		xhr.open('GET', file, true);
 		xhr.onload = function() {
 			if (this.readyState === 4) {
 				var thisResponseText = this.responseText;
@@ -21,7 +21,7 @@ module.exports = function () {
 			}
 		};
 		xhr.onerror = function() {
-			console.error(xhr.statusText);
+			errorCallback(xhr.statusText);
 		};
 		xhr.timeout = 200;
 		xhr.send(null);
