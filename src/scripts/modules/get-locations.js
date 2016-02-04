@@ -1,6 +1,6 @@
 'use strict';
 
-var Forecastio = require('../libs/forecastio');
+var Forecastio = require('../libs/forecast.io');
 var locations = require('./locations');
 console.log('locations', locations);
 
