@@ -27,7 +27,7 @@ module.exports = function() {
 	//load JSON parser/loader
 	var loadJSON = loadJSONFn();
 	//Frequency of data polling
-	var pollInterval = 36000; //0.01 hours
+	var pollInterval = 3600; //0.001 hours
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -69,8 +69,8 @@ module.exports = function() {
 			function pollForecast() {
 				//timeOut for dev mode
 				//setInterval for prod
-				//setTimeout(function() {
-				setInterval(function() {
+				setTimeout(function() {
+				//setInterval(function() {
 					var dataMatch = false;
 					//This is now asychronous
 					getLocations(function(locsData) {
@@ -143,6 +143,14 @@ module.exports = function() {
 				}
 				//once calculations are complete: retune
 				tunePitch();
+				//drawShapes();
+			}
+
+			function drawShapes() {
+				console.log('locationShapes', locationShapes);
+				for (var i = 0; i < locationShapes.length; i++) {
+					locationShapes[i].draw(locationsData[i].radius, locationsData[i].name);
+				}
 			}
 
 			function tunePitch() {
@@ -201,6 +209,7 @@ module.exports = function() {
 			}
 
 			LocationShape.prototype.draw = function(newRadius, name) {
+				console.log('draw');
 				sketch.fill(255,255,255);
 				sketch.ellipse(this.xPos, this.yPos, newRadius, newRadius);
 				sketch.textSize(18);
