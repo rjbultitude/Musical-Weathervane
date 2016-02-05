@@ -1,10 +1,13 @@
 [{
 	"speed": 5.01,
-	"bearing": 120
+	"bearing": 120,
+	"name": "place one"
 }, {
 	"speed": 15.8,
-	"bearing": 150
+	"bearing": 150,
+	"name": "place two"
 }, {
 	"speed": 13.41,
-	"bearing": 180
+	"bearing": 180,
+	"name": "place three"
 }]

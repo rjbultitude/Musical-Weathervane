@@ -2,7 +2,7 @@
 
 module.exports = function () {
 
-	var loadJSON = function(file, callback, errorCallback) {
+	return function(file, callback, errorCallback) {
 		var xhr = new XMLHttpRequest();
 		xhr.callback = callback;
 		if (xhr.overrideMimeType) {
@@ -16,7 +16,6 @@ module.exports = function () {
 			if (this.readyState === 4) {
 				var thisResponseText = this.responseText;
 				var thisResponseJSON = JSON.parse(thisResponseText);
-				console.log('thisResponseJSON', thisResponseJSON);
 				this.callback(thisResponseJSON);
 			}
 		};
@@ -26,6 +25,4 @@ module.exports = function () {
 		xhr.timeout = 200;
 		xhr.send(null);
 	};
-
-	return loadJSON;
 };
