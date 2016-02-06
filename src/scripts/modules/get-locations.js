@@ -19,6 +19,7 @@ module.exports = function(dataDone) {
 		var locationsSpeedBearing = [];
 		for (var i = 0; i < conditions.length; i++) {
 			var speed = conditions[i].getWindSpeed();
+			console.log('speed', speed);
 			var bearing = conditions[i].getWindBearing();
 			var name = locations[i].name;
 			var locSpeedBearing = new LocSpeedBearing(speed, bearing, name);
