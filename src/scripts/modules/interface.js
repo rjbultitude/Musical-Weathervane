@@ -49,9 +49,11 @@ module.exports = function() {
 		var myP5 = new P5(function(sketch) {
 
 			//The rate at which to detune
-			//Needs to be refactored to be
+			//TODO Needs to be refactored to be
 			//independant of the processor speed
-			var factor = 200000;
+			//The higher the number the bigger the loop
+			//amend with caution
+			var factor = 2250;
 			//Array for shape Objects
 			var locationShapes = [];
 
@@ -142,7 +144,7 @@ module.exports = function() {
 					locationsData[loc].newVolume = sketch.map(Math.round(locationsData[loc].speed), 0, 32, 0.4, 1.0);
 					locationsData[loc].newRadius = sketch.map(Math.round(locationsData[loc].speed), 0, 32, 20, 90);
 
-					//calculate fifference 
+					//calculate difference 
 					//to inform increment for this location
 					//and ensure it's a positive number
 					locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
@@ -213,8 +215,8 @@ module.exports = function() {
 			}
 
 			LocationShape.prototype.draw = function(newRadius, name) {
-				console.log('newRadius', newRadius);
-				console.log('name', name);
+				//console.log('newRadius', newRadius);
+				//console.log('name', name);
 				sketch.fill(255,255,255);
 				sketch.ellipse(this.xPos, this.yPos, newRadius, newRadius);
 				sketch.textSize(18);
