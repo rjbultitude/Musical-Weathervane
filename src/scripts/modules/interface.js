@@ -142,9 +142,6 @@ module.exports = function() {
 				drawShapes();
 				//Poll for 1st time
 				pollForecast();
-				//tests
-				console.log('locationsData[0].radius', locationsData[0].radius);
-				console.log('locationsData[0].speed', locationsData[0].speed);
 			}
 
 			function compareData(newData) {
@@ -227,17 +224,11 @@ module.exports = function() {
 			}
 
 			function overwriteLocData() {
-				console.log('locationsData', locationsData);
 				for (var loc in locationsData) {
 					locationsData[loc].speed = locationsData[loc].newSpeed;
 					locationsData[loc].bearing = locationsData[loc].newBearing;
 					locationsData[loc].radius = locationsData[loc].newRadius;
 				}
-				//tests
-				console.log('locationsData[0].radius', locationsData[0].radius);
-				console.log('locationsData[0].speed', locationsData[0].speed);
-				console.log('locationsData[0].newRadius', locationsData[0].newRadius);
-				console.log('locationsData[0].newSpeed', locationsData[0].newSpeed);
 			}
 
 			function LocationShape(xPos, yPos, radius, name) {
@@ -252,6 +243,7 @@ module.exports = function() {
 				sketch.fill(255,255,255);
 				sketch.ellipse(this.xPos, this.yPos, this.radius, this.radius);
 				sketch.textSize(18);
+				sketch.textAlign(sketch.CENTER);
 				sketch.text(this.name, this.xPos, this.yPos - radiusMax);
 				sketch.text(this.radius, this.xPos, this.yPos + radiusMax);
 			};
@@ -261,9 +253,13 @@ module.exports = function() {
 			};
 
 			function createShapes() {
+				/*
+					Positions
+	 			*/
+				var horizDiv = sketch.width/numKeys;
+				var horizOffset = horizDiv/2;
 				for (var i = 0; i < numKeys; i++) {
-					var third = sketch.width/3;
-					var newLocationShape = new LocationShape(third * i, sketch.height/2, locationsData[i].radius, locationsData[i].name);
+					var newLocationShape = new LocationShape((horizDiv * i) + horizOffset, sketch.height/2, locationsData[i].radius, locationsData[i].name);
 					locationShapes.push(newLocationShape);
 				}
 			}
