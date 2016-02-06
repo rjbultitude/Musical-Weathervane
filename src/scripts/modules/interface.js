@@ -161,10 +161,11 @@ module.exports = function() {
 				for (var loc in locationsData) {
 					//compare bearings
 					locationsData[loc].newBearing = newData[loc].bearing;
+					locationsData[loc].newSpeed = newData[loc].speed;
 					locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, bearingMin, bearingMax, pitchMin, pitchMax);
 
-					locationsData[loc].newVolume = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, volumeMin, volumeMax);
-					locationsData[loc].newRadius = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, radiusMin, radiusMax);
+					locationsData[loc].newVolume = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, volumeMin, volumeMax);
+					locationsData[loc].newRadius = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, radiusMin, radiusMax);
 
 					//calculate difference 
 					//to inform increment for this location
