@@ -45,8 +45,8 @@ module.exports = function() {
 	var volumeMin = 0.6;
 	var volumeMax = 1.0;
 	//Shape size
-	var radiusMin = 30;
-	var radiusMax = 90;
+	var radiusMin = 10;
+	var radiusMax = 200;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -124,6 +124,7 @@ module.exports = function() {
 				for (var loc in locationsData) {
 					locationsData[loc].sound.loop();
 
+					//Use toFixed?
 					locationsData[loc].pitch = sketch.map(locationsData[loc].bearing, bearingMin, bearingMax, pitchMin, pitchMax);
 					locationsData[loc].angle = locationsData[loc].bearing;
 	  				
@@ -156,7 +157,7 @@ module.exports = function() {
 
 				//loop through locations
 				for (var loc in locationsData) {
-					//compare bearings
+					//compare bearings and speed
 					locationsData[loc].newBearing = newData[loc].bearing;
 					locationsData[loc].newSpeed = newData[loc].speed;
 					locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, bearingMin, bearingMax, pitchMin, pitchMax);
@@ -168,10 +169,12 @@ module.exports = function() {
 					//to inform increment for this location
 					//and ensure it's a positive number
 					locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
+					locationsData[loc].shapeDiff = Math.abs(locationsData[loc].radius - locationsData[loc].newRadius);
 					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
+					locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
 				}
 				//once calculations are complete: retune
-				adjustVolume();
+				//adjustVolume();
 				tunePitch();
 			}
 
@@ -204,10 +207,18 @@ module.exports = function() {
 					}
 					else if (locationsData[loc].newPitch > locationsData[loc].pitch) {
 						locationsData[loc].pitch += locationsData[loc].incAmt;
+						locationsData[loc].radius += locationsData[loc].incAmtShape;
 					}
 					else if (locationsData[loc].newPitch < locationsData[loc].pitch) {
 						locationsData[loc].pitch -= locationsData[loc].incAmt;
+						locationsData[loc].radius -= locationsData[loc].incAmtShape;
 					}
+					console.log('loc', loc);
+					console.log('locationsData[loc].pitch', locationsData[loc].pitch);
+					//Set new shape size
+					sketch.background(0, 0, 0);
+					locationShapes[loc].update(locationsData[loc].radius);
+					locationShapes[loc].paint();
 					//Set new pitch
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
 
@@ -229,6 +240,8 @@ module.exports = function() {
 					locationsData[loc].bearing = locationsData[loc].newBearing;
 					locationsData[loc].radius = locationsData[loc].newRadius;
 				}
+				console.log('data overwritten');
+				drawShapes();
 			}
 
 			function LocationShape(xPos, yPos, radius, name) {
@@ -249,6 +262,7 @@ module.exports = function() {
 			};
 
 			LocationShape.prototype.update = function(newRadius) {
+				console.log('newRadius', newRadius);
 				this.radius = newRadius;
 			};
 
@@ -274,16 +288,18 @@ module.exports = function() {
 
 			sketch.setup = function setup() {
 				//Canvas setup
-				var myCanvas = sketch.createCanvas(800,200);
+				var myCanvas = sketch.createCanvas(700,500);
 				myCanvas.parent('canvas-container');
 				sketch.background(0,0,0);
 				//init sounds
 				//Must only be called once
 				mapPlaySounds();
+				sketch.noLoop();
 			};
 
 			sketch.draw = function draw() {
-				drawShapes();
+				//drawShapes();
+				//this is blocked by tunePitch
 			};
 
 		}, 'canvas-container');
