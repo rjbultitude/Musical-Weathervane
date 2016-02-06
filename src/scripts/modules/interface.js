@@ -52,7 +52,6 @@ module.exports = function() {
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
 		function(data) {
-			console.log('data', data);
 			//init app here
 			init(data);
 		},
@@ -111,7 +110,6 @@ module.exports = function() {
 
 				//Update location data now we have values
 				locationsData = createLocations();
-				console.log('locationsData', locationsData);
 
 				for (var i = 0; i < locationsData.length; i++) {
 					locationsData[i].shapeUpdate(locationsData[i].radius);
@@ -153,6 +151,8 @@ module.exports = function() {
 			}
 
 			function compareData(newData) {
+				console.log('newData', newData);
+				console.log('locationsData', locationsData);
 				newDataReady = false;
 				//Warnings
 				if (newData === undefined) {
@@ -169,6 +169,7 @@ module.exports = function() {
 					//compare bearings and speed
 					locationsData[loc].newBearing = newData[loc].bearing;
 					locationsData[loc].newSpeed = newData[loc].speed;
+					locationsData[loc].newName = newData[loc].name;
 					locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, bearingMin, bearingMax, pitchMin, pitchMax);
 
 					locationsData[loc].newVolume = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, volumeMin, volumeMax);
@@ -249,7 +250,6 @@ module.exports = function() {
 				this.bearing = bearing;
 				this.name = name;
 				this.radius = radius;
-				this.sound = null;
 				this.xPos = xPos;
 				this.yPos = yPos;
 				this.angle = null; //TODO
@@ -277,7 +277,7 @@ module.exports = function() {
 						this.radius += 1/factor;
 					}
 					else if (this.radius === newRadius) {
-						console.log('same');
+						//console.log('same');
 					}
 				}
 			};
@@ -290,7 +290,7 @@ module.exports = function() {
 				var horizDiv = sketch.width/numKeys;
 				var horizOffset = horizDiv/2;
 				for (var i = 0; i < numKeys; i++) {
-					var newLocationObj = new LocationObj(locationsData[i].speed, locationsData[i].bearing, locationsData[i].name, (horizDiv * i) + horizOffset, sketch.height/2, locationsData[i].radius, locationsData[i].sound);
+					var newLocationObj = new LocationObj(locationsData[i].speed, locationsData[i].bearing, locationsData[i].name, locationsData[i].radius, (horizDiv * i) + horizOffset, sketch.height/2, locationsData[i].sound);
 					finalLocsArr[i] = newLocationObj;
 				}
 				return finalLocsArr;
@@ -314,6 +314,7 @@ module.exports = function() {
 					//adjustVolume();
 					//tunePitch();
 					sketch.background(0, 0, 0);
+					console.log('locationsData', locationsData);
 					for (var i = 0; i < locationsData.length; i++) {
 						locationsData[i].shapeUpdate(locationsData[i].newRadius);
 						locationsData[i].shapePaint();
