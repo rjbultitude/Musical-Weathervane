@@ -42,7 +42,7 @@ module.exports = function() {
 	var speedMin = 0;
 	var speedMax = 32;
 	//Volume arbitary scale
-	var volumeMin = 0.6;
+	var volumeMin = 0.1;
 	var volumeMax = 1.0;
 	//Shape size
 	var radiusMin = 10;
@@ -174,7 +174,7 @@ module.exports = function() {
 					locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
 				}
 				//once calculations are complete: retune
-				//adjustVolume();
+				adjustVolume();
 				tunePitch();
 			}
 
@@ -219,6 +219,7 @@ module.exports = function() {
 					sketch.background(0, 0, 0);
 					locationShapes[loc].update(locationsData[loc].radius);
 					locationShapes[loc].paint();
+					sketch.redraw();
 					//Set new pitch
 					locationsData[loc].sound.rate(locationsData[loc].pitch);
 
@@ -299,6 +300,11 @@ module.exports = function() {
 
 			sketch.draw = function draw() {
 				//drawShapes();
+				console.log('drawing');
+				for (var i = 0; i < locationShapes.length; i++) {
+					locationShapes[i].update(locationsData[i].radius);
+					locationShapes[i].paint();
+				}
 				//this is blocked by tunePitch
 			};
 

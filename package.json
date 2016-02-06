@@ -18,7 +18,6 @@
     "gulp": "gulp"
   },
   "devDependencies": {
-    "browser-sync": "^2.7.12",
     "browserify": "^11.2.0",
     "del": "^2.0.2",
     "es6-promise": "^3.0.2",
