@@ -104,13 +104,14 @@ module.exports = function() {
 					var radiusNum = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, radiusMin, radiusMax);
 					locationsData[loc].radius = Math.round(radiusNum);
 				}
-				//Update location data now we have values
-				locationsData = createLocations();
-				console.log('locationsData', locationsData);
 
 				locationsData[loc].sound.amp(locationsData[loc].volume);
   				//locationsData[loc].sound.amp(1); //full volume
 				locationsData[loc].sound.rate(locationsData[loc].pitch);
+
+				//Update location data now we have values
+				locationsData = createLocations();
+				console.log('locationsData', locationsData);
 
 				for (var i = 0; i < locationsData.length; i++) {
 					locationsData[i].shapeUpdate(locationsData[i].radius);
@@ -313,14 +314,14 @@ module.exports = function() {
 					//adjustVolume();
 					//tunePitch();
 					sketch.background(0, 0, 0);
-					// for (var i = 0; i < locationsData.length; i++) {
-					// 	locationsData[i].shapeUpdate(locationsData[i].newRadius);
-					// 	locationsData[i].shapePaint();
-					// 	locationsData[i].volume = locationsData[i].newVolume;
-					// 	locationsData[i].pitch = locationsData[i].newPitch;
-					// 	locationsData[i].sound.amp(locationsData[i].volume);
-					// 	locationsData[i].sound.rate(locationsData[i].pitch);
-					// }
+					for (var i = 0; i < locationsData.length; i++) {
+						locationsData[i].shapeUpdate(locationsData[i].newRadius);
+						locationsData[i].shapePaint();
+						locationsData[i].volume = locationsData[i].newVolume;
+						locationsData[i].pitch = locationsData[i].newPitch;
+						locationsData[i].sound.amp(locationsData[i].volume);
+						locationsData[i].sound.rate(locationsData[i].pitch);
+					}
 				}
 			};
 
