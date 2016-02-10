@@ -48,6 +48,8 @@ module.exports = function() {
 	//Shape size
 	var radiusMin = 10;
 	var radiusMax = 100;
+	//Pitch diffs global
+	var pitchDiffArr = [];
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -73,7 +75,7 @@ module.exports = function() {
 			//independant of the processor speed
 			//The higher the number the bigger the loop
 			//amend with caution
-			var factor = 2250;
+			var factor = 20;
 
 			//add sounds to locactions object when ready
 			sketch.preload = function() {
@@ -151,8 +153,6 @@ module.exports = function() {
 			}
 
 			function compareData(newData) {
-				console.log('newData', newData);
-				console.log('locationsData', locationsData);
 				newDataReady = false;
 				//Warnings
 				if (newData === undefined) {
@@ -180,6 +180,7 @@ module.exports = function() {
 					//to inform increment for this location
 					//and ensure it's a positive number
 					locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
+					pitchDiffArr.push(locationsData[loc].pitchDiff);
 					locationsData[loc].shapeDiff = Math.abs(locationsData[loc].radius - locationsData[loc].newRadius);
 					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
 					locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
@@ -228,7 +229,7 @@ module.exports = function() {
 					}
 				}
 				//Overwrite bearing and speed
-				overwriteLocData();
+				//overwriteLocData();
 			}
 
 			function overwriteLocData() {
@@ -240,18 +241,20 @@ module.exports = function() {
 				console.log('data overwritten');
 			}
 
-			function LocationSound(sound) {
-				this.sound = sound;
-			}
-
 			//Location Class
-			function LocationObj(speed, bearing, name, radius, xPos, yPos, sound) {
+			function LocationObj(speed, bearing, pitch, volume, newPitch, newVolume, pitchDiff, incAmt, name, radius, xPos, yPos, sound) {
 				this.speed = speed;
 				this.bearing = bearing;
 				this.name = name;
 				this.radius = radius;
+				this.pitch = pitch;
+				this.newPitch = newPitch;
+				this.volume = volume;
+				this.newVolume = newVolume;
 				this.xPos = xPos;
 				this.yPos = yPos;
+				this.pitchDiff = pitchDiff;
+				this.incAmt = incAmt;
 				this.angle = null; //TODO
 				this.sound = sound;
 			}
@@ -268,7 +271,6 @@ module.exports = function() {
 
 			LocationObj.prototype.shapeUpdate = function(newRadius) {
 				if (newRadius !== undefined) {
-					//var diff = Math.round(Math.abs(this.radius - newRadius));
 					var factor = 1;
 					if (this.radius > newRadius) {
 						this.radius -= 1/factor;
@@ -282,15 +284,34 @@ module.exports = function() {
 				}
 			};
 
+			LocationObj.prototype.soundUpdate = function(i, num) {
+				if (pitchDiffArr[i] !== 0) {
+					//locationsData[i].sound.amp();
+					console.log('i', i);
+					console.log('this.pitch', this.pitch);
+					console.log('this.newPitch', this.newPitch);
+					console.log('this.incAmt', this.incAmt);
+					if (this.pitch > this.newPitch) {
+						this.pitch -= this.incAmt/100;
+						this.sound.rate(this.pitch);
+						//console.log('this.pitch', this.pitch);
+					}
+					else {
+						this.pitch += this.incAmt/100;
+						this.sound.rate(this.pitch);
+						//console.log('this.pitch', this.pitch);
+					}
+					pitchDiffArr[i] -= 0.01;
+					return;
+				}
+			};
+
 			function createLocations() {
 				var finalLocsArr = [];
-				/*
-					Positions
-	 			*/
 				var horizDiv = sketch.width/numKeys;
 				var horizOffset = horizDiv/2;
 				for (var i = 0; i < numKeys; i++) {
-					var newLocationObj = new LocationObj(locationsData[i].speed, locationsData[i].bearing, locationsData[i].name, locationsData[i].radius, (horizDiv * i) + horizOffset, sketch.height/2, locationsData[i].sound);
+					var newLocationObj = new LocationObj(locationsData[i].speed, locationsData[i].bearing, locationsData[i].pitch, locationsData[i].volume, locationsData[i].newPitch, locationsData[i].newVolume, locationsData[i].pitchDiff, locationsData[i].incAmt, locationsData[i].name, locationsData[i].radius, (horizDiv * i) + horizOffset, sketch.height/2, locationsData[i].sound);
 					finalLocsArr[i] = newLocationObj;
 				}
 				return finalLocsArr;
@@ -301,27 +322,25 @@ module.exports = function() {
 				var myCanvas = sketch.createCanvas(700,500);
 				myCanvas.parent('canvas-container');
 				sketch.background(0,0,0);
-				sketch.frameRate(20);
+				sketch.frameRate(2);
 				//init sounds
 				//Must only be called once
 				sketch.background(0, 0, 0);
 				mapPlaySounds();
 			};
 
+			var num = 0;
 			sketch.draw = function draw() {
+				num++;
 				if (newDataReady) {
 					//once calculations are complete: retune
 					//adjustVolume();
 					//tunePitch();
 					sketch.background(0, 0, 0);
-					console.log('locationsData', locationsData);
 					for (var i = 0; i < locationsData.length; i++) {
 						locationsData[i].shapeUpdate(locationsData[i].newRadius);
+						locationsData[i].soundUpdate(i, num);
 						locationsData[i].shapePaint();
-						locationsData[i].volume = locationsData[i].newVolume;
-						locationsData[i].pitch = locationsData[i].newPitch;
-						locationsData[i].sound.amp(locationsData[i].volume);
-						locationsData[i].sound.rate(locationsData[i].pitch);
 					}
 				}
 			};
