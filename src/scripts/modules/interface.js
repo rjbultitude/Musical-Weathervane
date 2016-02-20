@@ -104,6 +104,7 @@ module.exports = function() {
 					locationsData[loc].volume = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, volumeMin, volumeMax);
 					var radiusNum = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, radiusMin, radiusMax);
 					locationsData[loc].radius = Math.round(radiusNum);
+					console.log('locationsData[loc].pitch', locationsData[loc].pitch);
 				}
 
 				locationsData[loc].sound.amp(locationsData[loc].volume);
@@ -145,6 +146,9 @@ module.exports = function() {
 								}
 							}
 						}
+						//If all of the above were true
+						//do nothing
+						//if not continue with app
 						if (dataMatch === false) {
 							compareData(newLocationData);
 						}
@@ -184,6 +188,8 @@ module.exports = function() {
 					locationsData[loc].shapeDiff = Math.abs(locationsData[loc].radius - locationsData[loc].newRadius);
 					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
 					locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
+
+					console.log('locationsData[loc].newPitch', locationsData[loc].newPitch);
 				}
 				newDataReady = true;
 			}
@@ -287,17 +293,19 @@ module.exports = function() {
 			LocationObj.prototype.soundUpdate = function(i, num) {
 				if (pitchDiffArr[i] !== 0) {
 					//locationsData[i].sound.amp();
-					console.log('i', i);
-					console.log('this.pitch', this.pitch);
-					console.log('this.newPitch', this.newPitch);
-					console.log('this.incAmt', this.incAmt);
-					if (this.pitch > this.newPitch) {
-						this.pitch -= this.incAmt/100;
+					// console.log('i', i);
+					// console.log('this.pitch', this.pitch);
+					// console.log('this.newPitch', this.newPitch);
+					// console.log('this.incAmt', this.incAmt);
+					//if (this.pitch > this.newPitch) {
+					if (this.pitch.toFixed(2)/1 > this.newPitch.toFixed(2)/1) {
+						this.pitch -= this.incAmt;
 						this.sound.rate(this.pitch);
 						//console.log('this.pitch', this.pitch);
 					}
-					else {
-						this.pitch += this.incAmt/100;
+					//else if (this.pitch < this.newPitch) {
+					else if (this.pitch.toFixed(2)/1 < this.newPitch.toFixed(2)/1) {
+						this.pitch += this.incAmt;
 						this.sound.rate(this.pitch);
 						//console.log('this.pitch', this.pitch);
 					}
@@ -337,7 +345,9 @@ module.exports = function() {
 					//adjustVolume();
 					//tunePitch();
 					sketch.background(0, 0, 0);
+					console.log('newDataReady', newDataReady);
 					for (var i = 0; i < locationsData.length; i++) {
+						console.log('locationsData[0].pitch', locationsData[0].pitch);
 						locationsData[i].shapeUpdate(locationsData[i].newRadius);
 						locationsData[i].soundUpdate(i, num);
 						locationsData[i].shapePaint();
