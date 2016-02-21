@@ -189,6 +189,7 @@ module.exports = function() {
 					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
 					locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
 
+					console.log('locationsData[loc].pitch', locationsData[loc].pitch);
 					console.log('locationsData[loc].newPitch', locationsData[loc].newPitch);
 				}
 				newDataReady = true;
@@ -237,25 +238,20 @@ module.exports = function() {
 				}
 			};
 
-			LocationObj.prototype.soundUpdate = function(i) {
-				if (pitchDiffArr[i] !== 0) {
-					//TODO
-					//locationsData[i].sound.amp();
-					// console.log('this.pitch', this.pitch);
-					// Use approximate values
-					if (this.pitch.toFixed(2)/1 > this.newPitch.toFixed(2)/1) {
-						this.pitch -= this.incAmt;
-						this.sound.rate(this.pitch);
-						//console.log('this.pitch', this.pitch);
-					}
-					//else if (this.pitch < this.newPitch) {
-					else if (this.pitch.toFixed(2)/1 < this.newPitch.toFixed(2)/1) {
-						this.pitch += this.incAmt;
-						this.sound.rate(this.pitch);
-						//console.log('this.pitch', this.pitch);
-					}
-					pitchDiffArr[i] -= 0.01;
-					return;
+			LocationObj.prototype.soundUpdate = function() {
+				//TODO
+				//locationsData[i].sound.amp();
+				// console.log('this.pitch', this.pitch);
+				// Use approximate values
+				if (this.pitch.toFixed(2)/1 > this.newPitch.toFixed(2)/1) {
+					this.pitch -= this.incAmt;
+					this.sound.rate(this.pitch);
+					//console.log('this.pitch', this.pitch);
+				}
+				else if (this.pitch.toFixed(2)/1 < this.newPitch.toFixed(2)/1) {
+					this.pitch += this.incAmt;
+					this.sound.rate(this.pitch);
+					//console.log('this.pitch', this.pitch);
 				}
 			};
 
@@ -275,7 +271,7 @@ module.exports = function() {
 				var myCanvas = sketch.createCanvas(700,500);
 				myCanvas.parent('canvas-container');
 				sketch.background(0,0,0);
-				sketch.frameRate(2);
+				sketch.frameRate(25);
 				//init sounds
 				//Must only be called once
 				sketch.background(0, 0, 0);
@@ -292,7 +288,7 @@ module.exports = function() {
 					for (var i = 0; i < locationsData.length; i++) {
 						//console.log('locationsData[0].pitch', locationsData[0].pitch);
 						locationsData[i].shapeUpdate(locationsData[i].newRadius);
-						locationsData[i].soundUpdate(i);
+						locationsData[i].soundUpdate();
 						locationsData[i].shapePaint();
 					}
 				}
