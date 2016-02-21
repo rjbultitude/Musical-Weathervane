@@ -107,7 +107,17 @@
 	 * @return boolean
 	 */
 	ForecastIO.prototype.getCurrentConditions = function getCurrentConditions(locations, appFn) {
-		var allLocDataArr = this.requestAllLocData(locations);
+		//Check object type
+		var allLocDataArr = [];
+		var locationsObjWrap = [];
+		if (!Array.isArray(locations)) {
+			console.log('locations was not an array');
+			locationsObjWrap.push(locations);
+			allLocDataArr = this.requestAllLocData(locationsObjWrap);
+		}
+		else {
+			allLocDataArr = this.requestAllLocData(locations);
+		}
 		Promise.all(allLocDataArr).then(function(values) {
 			var dataSets = [];
 			for (var i = 0; i < values.length; i++) {
