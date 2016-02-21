@@ -20,6 +20,13 @@
         <p>Inspired by the Croatian sea organ this app consumes real-time weather data and generates music using wind direction and speed</p>
         <div id="canvas-container">
         </div>
+        <form data-behavior="form-coords">
+            <label for="lat">Lattiude</label>
+            <input type="text" id="lat">
+            <label for="long">Longitude</label>
+            <input type="text" id="long">
+            <button id="submit">Submit</button>
+        </form>
         <p>
             <span id="speedBrixton"></span>
             <span id="bearingBrixton"></span>
