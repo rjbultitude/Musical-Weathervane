@@ -128,6 +128,7 @@ module.exports = function() {
 			function formInit() {
 				coordsForm(function(newSingleLoc) {
 					console.log('newSingleLoc', newSingleLoc);
+					//compareData(newSingleLoc);
 				});
 			}
 
@@ -142,9 +143,8 @@ module.exports = function() {
 						dataCheckLoop:
 						for (var newLoc in newLocationData) {
 							for (var loc in locationsData) {
-								//If any bearing data is different then break
+								//If any bearing data is different stop
 								//Only compare bearing data for now
-								//if (newLocationData[newLoc].bearing !== locationsData[loc].bearing && newLocationData[newLoc].spped !== locationsData[loc].spped) {
 								if (newLocationData[newLoc].bearing !== locationsData[loc].bearing) {
 									dataMatch = false;
 									break;
@@ -155,8 +155,7 @@ module.exports = function() {
 								}
 							}
 						}
-						//If all of the above were true
-						//do nothing
+						//If all of the above were true do nothing
 						//if not continue with app
 						if (dataMatch === false) {
 							compareData(newLocationData);
@@ -172,34 +171,41 @@ module.exports = function() {
 					console.log('no data was passed in');
 					return false;
 				}
-				else if (Object.keys(newData).length !== Object.keys(locationsData).length) {
+				//Are we comparing a complete set of locations
+				if (Object.keys(newData).length !== Object.keys(locationsData).length) {
 					console.log('data doesn\'t match. No. of objs is different');
 					return false;
 				}
+				else {
+					updateLocData(newData);
+				}
+			}
 
+			function updateLocData(newData) {
 				//loop through locations
 				for (var loc in locationsData) {
 					//compare bearings and speed
-					locationsData[loc].newBearing = newData[loc].bearing;
-					locationsData[loc].newSpeed = newData[loc].speed;
-					locationsData[loc].newName = newData[loc].name;
-					locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, bearingMin, bearingMax, pitchMin, pitchMax);
+					if (newData[loc] !== undefined) {
+						locationsData[loc].newBearing = newData[loc].bearing;
+						locationsData[loc].newSpeed = newData[loc].speed;
+						locationsData[loc].newName = newData[loc].name;
+						locationsData[loc].newPitch = sketch.map(locationsData[loc].newBearing, bearingMin, bearingMax, pitchMin, pitchMax);
 
-					locationsData[loc].newVolume = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, volumeMin, volumeMax);
-					var newRadiusNum = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, radiusMin, radiusMax);
-					locationsData[loc].newRadius = Math.round(newRadiusNum);
+						locationsData[loc].newVolume = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, volumeMin, volumeMax);
+						var newRadiusNum = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, radiusMin, radiusMax);
+						locationsData[loc].newRadius = Math.round(newRadiusNum);
 
-					//calculate difference 
-					//to inform increment for this location
-					//and ensure it's a positive number
-					locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
-					pitchDiffArr.push(locationsData[loc].pitchDiff);
-					locationsData[loc].shapeDiff = Math.abs(locationsData[loc].radius - locationsData[loc].newRadius);
-					locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
-					locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
+						//calculate differences 
+						//and ensure it's a positive number
+						locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
+						pitchDiffArr.push(locationsData[loc].pitchDiff);
+						locationsData[loc].shapeDiff = Math.abs(locationsData[loc].radius - locationsData[loc].newRadius);
+						locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
+						locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
 
-					console.log('locationsData[loc].pitch', locationsData[loc].pitch);
-					console.log('locationsData[loc].newPitch', locationsData[loc].newPitch);
+						console.log('locationsData[loc].pitch', locationsData[loc].pitch);
+						console.log('locationsData[loc].newPitch', locationsData[loc].newPitch);
+					}
 				}
 				newDataReady = true;
 			}
@@ -220,6 +226,7 @@ module.exports = function() {
 				this.incAmt = incAmt;
 				this.angle = null; //TODO
 				this.sound = sound;
+				this.soundSame = false;
 			}
 
 			LocationObj.prototype.shapePaint = function() {
@@ -262,6 +269,10 @@ module.exports = function() {
 					this.sound.rate(this.pitch);
 					//console.log('this.pitch', this.pitch);
 				}
+				//might have to use a range here
+				else if (this.pitch.toFixed(2)/1 === this.newPitch.toFixed(2)/1) {
+					this.soundSame = true;
+				}
 			};
 
 			LocationObj.prototype.nameUpdate = function() {
@@ -291,9 +302,7 @@ module.exports = function() {
 				mapPlaySounds();
 			};
 
-			var num = 0;
 			sketch.draw = function draw() {
-				num++;
 				if (newDataReady) {
 					//once calculations are complete
 					sketch.background(0, 0, 0);
