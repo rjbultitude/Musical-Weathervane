@@ -194,59 +194,6 @@ module.exports = function() {
 				newDataReady = true;
 			}
 
-			function tunePitch() {
-				var loopNum = numKeys * factor;
-				var loc = 0;
-
-				dataLoop:
-				for (var i = 0; i < loopNum; i++) {
-					//Pitch tune logic
-					if (locationsData[loc].pitch === locationsData[loc].newPitch) {
-						console.log('' + loc + ' is same');
-						if (loc < numKeys -1) {
-							loc++;
-							//if current pitch and new pitch match move to the next location
-							continue dataLoop;
-						}
-						else {
-							//if all have been checked then stop
-							break;
-						}
-					}
-					else if (locationsData[loc].newPitch > locationsData[loc].pitch) {
-						locationsData[loc].pitch += locationsData[loc].incAmt;
-						locationsData[loc].radius += locationsData[loc].incAmtShape;
-					}
-					else if (locationsData[loc].newPitch < locationsData[loc].pitch) {
-						locationsData[loc].pitch -= locationsData[loc].incAmt;
-						locationsData[loc].radius -= locationsData[loc].incAmtShape;
-					}
-					console.log('loc', loc);
-					//Set new shape size?
-					//Set new pitch
-					locationsData[loc].sound.rate(locationsData[loc].pitch);
-
-					//Move to next loc obj
-					loc++;
-					
-					//Loop through loc objects array again
-					if (loc === Object.keys(locationsData).length) {
-						loc = 0;
-					}
-				}
-				//Overwrite bearing and speed
-				//overwriteLocData();
-			}
-
-			function overwriteLocData() {
-				for (var loc in locationsData) {
-					locationsData[loc].speed = locationsData[loc].newSpeed;
-					locationsData[loc].bearing = locationsData[loc].newBearing;
-					locationsData[loc].radius = locationsData[loc].newRadius;
-				}
-				console.log('data overwritten');
-			}
-
 			//Location Class
 			function LocationObj(speed, bearing, pitch, volume, newPitch, newVolume, pitchDiff, incAmt, name, radius, xPos, yPos, sound) {
 				this.speed = speed;
@@ -290,14 +237,12 @@ module.exports = function() {
 				}
 			};
 
-			LocationObj.prototype.soundUpdate = function(i, num) {
+			LocationObj.prototype.soundUpdate = function(i) {
 				if (pitchDiffArr[i] !== 0) {
+					//TODO
 					//locationsData[i].sound.amp();
-					// console.log('i', i);
 					// console.log('this.pitch', this.pitch);
-					// console.log('this.newPitch', this.newPitch);
-					// console.log('this.incAmt', this.incAmt);
-					//if (this.pitch > this.newPitch) {
+					// Use approximate values
 					if (this.pitch.toFixed(2)/1 > this.newPitch.toFixed(2)/1) {
 						this.pitch -= this.incAmt;
 						this.sound.rate(this.pitch);
@@ -341,15 +286,13 @@ module.exports = function() {
 			sketch.draw = function draw() {
 				num++;
 				if (newDataReady) {
-					//once calculations are complete: retune
-					//adjustVolume();
-					//tunePitch();
+					//once calculations are complete
 					sketch.background(0, 0, 0);
-					console.log('newDataReady', newDataReady);
+					//console.log('newDataReady', newDataReady);
 					for (var i = 0; i < locationsData.length; i++) {
-						console.log('locationsData[0].pitch', locationsData[0].pitch);
+						//console.log('locationsData[0].pitch', locationsData[0].pitch);
 						locationsData[i].shapeUpdate(locationsData[i].newRadius);
-						locationsData[i].soundUpdate(i, num);
+						locationsData[i].soundUpdate(i);
 						locationsData[i].shapePaint();
 					}
 				}
