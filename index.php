@@ -27,18 +27,6 @@
             <input type="text" id="long">
             <button id="submit">Submit</button>
         </form>
-        <p>
-            <span id="speedBrixton"></span>
-            <span id="bearingBrixton"></span>
-        </p>
-        <p>
-            <span id="speedBirkenhead"></span>
-            <span id="bearingBirkenhead"></span>
-        </p>
-        <p>
-            <span id="speedBradford"></span>
-            <span id="bearingBradford"></span>
-        </p>
         <script src="dist/scripts/app.js"></script>
     </body>
 </html>

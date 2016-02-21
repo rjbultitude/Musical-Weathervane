@@ -20,6 +20,7 @@
 
 var loadJSONFn = require('./load-json');
 var	getLocations = require('./get-locations');
+var coordsForm = require('./coords-form');
 var P5 = require('../libs/p5');
 require('../libs/p5.sound');
 
@@ -120,6 +121,14 @@ module.exports = function() {
 				}
 				//Poll for 1st time
 				pollForecast();
+				//Init Form
+				formInit();
+			}
+
+			function formInit() {
+				coordsForm(function(newSingleLoc) {
+					console.log('newSingleLoc', newSingleLoc);
+				});
 			}
 
 			function pollForecast() {
@@ -253,6 +262,10 @@ module.exports = function() {
 					this.sound.rate(this.pitch);
 					//console.log('this.pitch', this.pitch);
 				}
+			};
+
+			LocationObj.prototype.nameUpdate = function() {
+				//
 			};
 
 			function createLocations() {
