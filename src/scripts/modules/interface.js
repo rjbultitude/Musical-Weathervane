@@ -51,6 +51,7 @@ module.exports = function() {
 	var radiusMax = 100;
 	//Pitch diffs global
 	var pitchDiffArr = [];
+	var polling = false;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -125,6 +126,17 @@ module.exports = function() {
 				formInit();
 			}
 
+			function showPollingMessage() {
+				var rectWidth = 280;
+				var rectHeight = 60;
+				sketch.fill(255,255,255,10);
+				sketch.rect(sketch.width/2 - rectWidth/2, 0, rectWidth, rectHeight);
+				sketch.textSize(14);
+				sketch.textAlign(sketch.CENTER);
+				sketch.fill(255,255,255);
+				sketch.text('Fetching new weather data', sketch.width/2, rectHeight/2);
+			}
+
 			function formInit() {
 				coordsForm(function(newSingleLoc) {
 					console.log('newSingleLoc', newSingleLoc);
@@ -138,6 +150,8 @@ module.exports = function() {
 				setTimeout(function() {
 				//setInterval(function() {
 					var dataMatch = false;
+					//Loading message
+					polling = true;
 					//This is asychronous
 					getLocations(function(newLocationData) {
 						dataCheckLoop:
@@ -203,10 +217,11 @@ module.exports = function() {
 						locationsData[loc].incAmt = locationsData[loc].pitchDiff / factor;
 						locationsData[loc].incAmtShape = locationsData[loc].shapeDiff / factor;
 
-						console.log('locationsData[loc].pitch', locationsData[loc].pitch);
-						console.log('locationsData[loc].newPitch', locationsData[loc].newPitch);
+						// console.log('locationsData[loc].pitch', locationsData[loc].pitch);
+						// console.log('locationsData[loc].newPitch', locationsData[loc].newPitch);
 					}
 				}
+				polling = false;
 				newDataReady = true;
 			}
 
@@ -294,7 +309,6 @@ module.exports = function() {
 				//Canvas setup
 				var myCanvas = sketch.createCanvas(700,500);
 				myCanvas.parent('canvas-container');
-				sketch.background(0,0,0);
 				sketch.frameRate(25);
 				//init sounds
 				//Must only be called once
@@ -306,6 +320,9 @@ module.exports = function() {
 				if (newDataReady) {
 					//once calculations are complete
 					sketch.background(0, 0, 0);
+					if (polling === true) {
+						showPollingMessage();
+					}
 					//console.log('newDataReady', newDataReady);
 					for (var i = 0; i < locationsData.length; i++) {
 						//console.log('locationsData[0].pitch', locationsData[0].pitch);
