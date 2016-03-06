@@ -31,6 +31,7 @@ module.exports = function() {
 	var pollInterval = 3600; //0.001 hours
 	var staticDataReady = false;
 	var newDataReady = false;
+	var polling = false;
 
 	/*
 		Ranges to be mapped
@@ -52,7 +53,6 @@ module.exports = function() {
 	var radiusMax = 100;
 	//Pitch diffs global
 	var pitchDiffArr = [];
-	var polling = false;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -270,7 +270,6 @@ module.exports = function() {
 			LocationObj.prototype.soundUpdate = function() {
 				//TODO
 				//locationsData[i].sound.amp();
-				// console.log('this.pitch', this.pitch);
 				// Use approximate values
 				if (this.pitch.toFixed(2)/1 > this.newPitch.toFixed(2)/1) {
 					this.pitch -= this.incAmt;
