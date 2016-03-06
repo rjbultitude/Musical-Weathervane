@@ -16,17 +16,18 @@
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
-        <p>Inspired by the Croatian sea organ this app consumes real-time weather data and generates music using wind direction and speed</p>
-        <div id="canvas-container">
-        </div>
-        <form id="form-coords">
-            <label for="lat">Lattiude</label>
-            <input type="text" id="lat">
-            <label for="long">Longitude</label>
-            <input type="text" id="long">
-            <button id="submit">Submit</button>
-        </form>
+        <main aria-role="main" class="wrapper">
+            <p>Inspired by the Croatian sea organ this app consumes real-time weather data and generates music using wind direction and speed</p>
+            <div id="canvas-container">
+            </div>
+            <form id="form-coords">
+                <label for="lat">Lattiude</label>
+                <input type="text" id="lat">
+                <label for="long">Longitude</label>
+                <input type="text" id="long">
+                <button id="submit">Submit</button>
+            </form>
+        </main>
         <script src="dist/scripts/app.js"></script>
     </body>
 </html>
