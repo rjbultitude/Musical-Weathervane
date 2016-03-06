@@ -29,6 +29,7 @@ module.exports = function() {
 	var loadJSON = loadJSONFn();
 	//Frequency of data polling
 	var pollInterval = 3600; //0.001 hours
+	var staticDataReady = false;
 	var newDataReady = false;
 
 	/*
@@ -106,7 +107,6 @@ module.exports = function() {
 					locationsData[loc].volume = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, volumeMin, volumeMax);
 					var radiusNum = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, radiusMin, radiusMax);
 					locationsData[loc].radius = Math.round(radiusNum);
-					console.log('locationsData[loc].pitch', locationsData[loc].pitch);
 				}
 
 				locationsData[loc].sound.amp(locationsData[loc].volume);
@@ -115,11 +115,8 @@ module.exports = function() {
 
 				//Update location data now we have values
 				locationsData = createLocations();
-
-				for (var i = 0; i < locationsData.length; i++) {
-					locationsData[i].shapeUpdate(locationsData[i].radius);
-					locationsData[i].shapePaint();
-				}
+				//Draw
+				staticDataReady = true;
 				//Poll for 1st time
 				pollForecast();
 				//Init Form
@@ -223,6 +220,7 @@ module.exports = function() {
 				}
 				polling = false;
 				newDataReady = true;
+				staticDataReady = false;
 			}
 
 			//Location Class
@@ -254,16 +252,16 @@ module.exports = function() {
 				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + radiusMax);
 			};
 
-			LocationObj.prototype.shapeUpdate = function(newRadius) {
-				if (newRadius !== undefined) {
+			LocationObj.prototype.shapeUpdate = function() {
+				if (this.newRadius !== undefined) {
 					var factor = 1;
-					if (this.radius > newRadius) {
+					if (this.radius > this.newRadius) {
 						this.radius -= 1/factor;
 					}
-					else if (this.radius < newRadius) {
+					else if (this.radius < this.newRadius) {
 						this.radius += 1/factor;
 					}
-					else if (this.radius === newRadius) {
+					else if (this.radius === this.newRadius) {
 						//console.log('same');
 					}
 				}
@@ -317,19 +315,18 @@ module.exports = function() {
 			};
 
 			sketch.draw = function draw() {
-				if (newDataReady) {
-					//once calculations are complete
-					sketch.background(0, 0, 0);
-					if (polling === true) {
-						showPollingMessage();
+				sketch.background(0, 0, 0);
+				if (polling === true) {
+					showPollingMessage();
+				}
+				paintUpdateLoop:
+				for (var i = 0; i < locationsData.length; i++) {
+					locationsData[i].shapePaint();
+					locationsData[i].shapeUpdate();
+					if (newDataReady !== true) {
+						continue;
 					}
-					//console.log('newDataReady', newDataReady);
-					for (var i = 0; i < locationsData.length; i++) {
-						//console.log('locationsData[0].pitch', locationsData[0].pitch);
-						locationsData[i].shapeUpdate(locationsData[i].newRadius);
-						locationsData[i].soundUpdate();
-						locationsData[i].shapePaint();
-					}
+					locationsData[i].soundUpdate();
 				}
 			};
 
