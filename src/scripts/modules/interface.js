@@ -119,7 +119,7 @@ module.exports = function() {
 				//Draw
 				staticDataReady = true;
 				//Poll for 1st time
-				pollForecast();
+				//pollForecast();
 				//Init Form
 				formInit();
 			}
@@ -138,7 +138,7 @@ module.exports = function() {
 			function formInit() {
 				coordsForm(function(newSingleLoc) {
 					console.log('newSingleLoc', newSingleLoc);
-					//compareData(newSingleLoc);
+					//use pubsub here
 				});
 			}
 
@@ -346,9 +346,6 @@ module.exports = function() {
 					}
 					locationsData[i].soundUpdate();
 				}
-				console.log(locationsData[0].name);
-				console.log('sin', sketch.sin(locationsData[0].bearing));
-				console.log('cos', sketch.cos(locationsData[0].bearing));
 			};
 
 		}, 'canvas-container');
