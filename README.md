@@ -65,7 +65,12 @@ Styles and scripts will be processed and minified. Modernizr will be custom buil
 
 ## References
 
-* [Zone CSS style guide](https://zonecode.codebasehq.com/projects/zone-tech-documentation/notebook/Zone%20CSS%20Style%20Guide.md) - for Zone CSS best practice and standards
-* [Zone JavaScript style guide](https://zonecode.codebasehq.com/projects/zone-tech-documentation/notebook/JS%20Style%20Guide.md) - for Zone JavaScript best practice and standards
-* [HTML5 Boilerplate](http://html5boilerplate.com/) - The code upon which this template is based (with many many tweaks!)
-* [Inuit CSS](http://inuitcss.com/) - for BEM, OOCSS, SASS structure
+* [p5.js](http://p5js.org/)
+* [Forecast.io JS API](https://github.com/iantearle/forecast.io-javascript-api)
+* [Moment.js](http://momentjs.com/)
+* [JS Promises Polyfill](https://www.npmjs.com/package/es6-promise-polyfill)
+
+##To do
+
+* Remove unused code from Forecast.io JS API
+* Add loading message for pre-js state
