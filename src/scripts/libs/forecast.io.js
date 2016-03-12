@@ -125,7 +125,6 @@
 					var currently = new ForecastIOConditions(jsonData.currently);
 					dataSets.push(currently);
 				}
-			console.log('dataSets', dataSets);
 			appFn(dataSets);
 			return dataSets;
 		});
