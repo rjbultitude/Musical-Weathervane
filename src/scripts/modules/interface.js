@@ -53,6 +53,8 @@ module.exports = function() {
 	var radiusMax = 100;
 	//Pitch diffs global
 	var pitchDiffArr = [];
+	//line length
+	var bearingLineLength = 40;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -101,7 +103,6 @@ module.exports = function() {
 					locationsData[loc].sound.loop();
 					//Wind Bearing
 					locationsData[loc].pitch = sketch.map(locationsData[loc].bearing, bearingMin, bearingMax, pitchMin, pitchMax);
-					locationsData[loc].angle = locationsData[loc].bearing;
 	  				
 	  				//Wind Speed
 					locationsData[loc].volume = sketch.map(Math.round(locationsData[loc].speed), speedMin, speedMax, volumeMin, volumeMax);
@@ -237,17 +238,20 @@ module.exports = function() {
 				this.yPos = yPos;
 				this.pitchDiff = pitchDiff;
 				this.incAmt = incAmt;
-				this.angle = null; //TODO
 				this.sound = sound;
 				this.soundSame = false;
 			}
 
 			LocationObj.prototype.shapePaint = function() {
 				sketch.noStroke();
-				sketch.fill(255,255,255);
+				sketch.fill(255,255,255, 100);
 				sketch.ellipse(this.xPos, this.yPos, this.radius, this.radius);
+				sketch.stroke(255,255,255);
+				sketch.line(this.xPos, this.yPos, this.xPos + (sketch.sin(this.bearing/sketch.TWO_PI) * bearingLineLength), this.yPos + (sketch.cos(this.bearing/sketch.TWO_PI)) * bearingLineLength);
 				sketch.textSize(18);
 				sketch.textAlign(sketch.CENTER);
+				sketch.noStroke();
+				sketch.fill(255,255,255,255);
 				sketch.text(this.name, this.xPos, this.yPos - radiusMax);
 				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + radiusMax);
 			};
@@ -262,6 +266,20 @@ module.exports = function() {
 						this.radius += 1/factor;
 					}
 					else if (this.radius === this.newRadius) {
+						//console.log('same');
+					}
+				}
+			};
+
+			LocationObj.prototype.angleUpdate = function() {
+				if (this.newBearing !== undefined) {
+					if (this.bearing > this.newBearing) {
+						this.bearing -= 1;
+					}
+					else if (this.bearing < this.newBearing) {
+						this.bearing += 1;
+					}
+					else if (this.bearing === this.newBearing) {
 						//console.log('same');
 					}
 				}
@@ -322,11 +340,15 @@ module.exports = function() {
 				for (var i = 0; i < locationsData.length; i++) {
 					locationsData[i].shapePaint();
 					locationsData[i].shapeUpdate();
+					locationsData[i].angleUpdate();
 					if (newDataReady !== true) {
 						continue;
 					}
 					locationsData[i].soundUpdate();
 				}
+				console.log(locationsData[0].name);
+				console.log('sin', sketch.sin(locationsData[0].bearing));
+				console.log('cos', sketch.cos(locationsData[0].bearing));
 			};
 
 		}, 'canvas-container');
