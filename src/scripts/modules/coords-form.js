@@ -3,8 +3,10 @@
 var Forecastio = require('../libs/forecast.io');
 var Lsb = require('./lsb-cnstrctr');
 var Nll = require('./nll-cnstrctr');
+var postal = require('postal');
+var channel = postal.channel();
 
-module.exports = function(dataDone) {
+module.exports = function() {
 	var submitBtn = document.getElementById('submit');
 	submitBtn.addEventListener('click', function(e) {
 		e.preventDefault();
@@ -17,16 +19,14 @@ module.exports = function(dataDone) {
 		});
 
 		forecast.getCurrentConditions(newLocation, function(conditions) {
-			var locationsSpeedBearing = [];
-			for (var i = 0; i < conditions.length; i++) {
-				var speed = conditions[i].getWindSpeed();
-				var bearing = conditions[i].getWindBearing();
+			if (conditions.length === 1) {
+				var speed = conditions[0].getWindSpeed();
+				var bearing = conditions[0].getWindBearing();
 				//TODO get correct name
 				var name = 'Here';
 				var locSpeedBearing = new Lsb(speed, bearing, name);
-				locationsSpeedBearing.push(locSpeedBearing);
+				channel.publish('formUpdate', locSpeedBearing);
 			}
-			dataDone(locationsSpeedBearing);
 		});
 	});
 };
