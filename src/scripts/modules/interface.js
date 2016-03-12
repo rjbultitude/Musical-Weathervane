@@ -273,7 +273,10 @@ module.exports = function() {
 				sketch.noStroke();
 				sketch.fill(255, 255, 255, 255);
 				sketch.text(this.name, this.xPos, this.yPos - radiusMax);
-				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + radiusMax);
+				sketch.text('Speed', this.xPos, this.yPos + radiusMax);
+				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + radiusMax + radiusMax/4);
+				sketch.text('Bearing', this.xPos, this.yPos + radiusMax + radiusMax/2);
+				sketch.text(this.bearing, this.xPos, this.yPos + radiusMax + (radiusMax/4 * 3));
 			};
 
 			LocationObj.prototype.shapeUpdate = function() {
@@ -339,7 +342,7 @@ module.exports = function() {
 
 			sketch.setup = function setup() {
 				//Canvas setup
-				var myCanvas = sketch.createCanvas(700, 500);
+				var myCanvas = sketch.createCanvas(800, 500);
 				myCanvas.parent('canvas-container');
 				sketch.frameRate(25);
 				//init sounds

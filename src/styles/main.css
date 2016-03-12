@@ -72,17 +72,18 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
 
-
-
-
-
-
-
-
-
-
-
+#defaultCanvas0 {
+    display: inline-block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 800px;
+    max-height: 600px;
+}
 
 
 
