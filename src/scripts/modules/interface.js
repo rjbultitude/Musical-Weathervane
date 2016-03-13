@@ -133,14 +133,14 @@ module.exports = function() {
 			function showUserMessage() {
 				sketch.textSize(14);
 				sketch.textAlign(sketch.CENTER);
-				sketch.fill(255, 255, 255);
+				sketch.fill(0, 0, 0);
 				sketch.text(userMsgStr, sketch.width / 2, 30);
 			}
 
 			function showPollingMessage() {
 				sketch.textSize(14);
 				sketch.textAlign(sketch.CENTER);
-				sketch.fill(255, 255, 255);
+				sketch.fill(0, 0, 0);
 				sketch.text(pollingMsgStr, sketch.width / 2, 30);
 			}
 
@@ -272,14 +272,14 @@ module.exports = function() {
 
 			LocationObj.prototype.shapePaint = function() {
 				sketch.noStroke();
-				sketch.fill(255, 255, 255, 100);
+				sketch.fill(0, 0, 0, 100);
 				sketch.ellipse(this.xPos, this.yPos, this.radius, this.radius);
-				sketch.stroke(255, 255, 255);
+				sketch.stroke(0, 0, 0);
 				sketch.line(this.xPos, this.yPos, this.xPos + (sketch.sin(this.bearing / sketch.TWO_PI) * bearingLineLength), this.yPos + (sketch.cos(this.bearing / sketch.TWO_PI)) * bearingLineLength);
 				sketch.textSize(18);
 				sketch.textAlign(sketch.CENTER);
 				sketch.noStroke();
-				sketch.fill(255, 255, 255, 255);
+				sketch.fill(0, 0, 0, 255);
 				sketch.text(this.name, this.xPos, this.yPos - radiusMax);
 				sketch.text('Speed', this.xPos, this.yPos + radiusMax);
 				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + radiusMax + radiusMax/4);
@@ -360,7 +360,7 @@ module.exports = function() {
 			};
 
 			sketch.draw = function draw() {
-				sketch.background(0, 0, 0);
+				sketch.background(255, 255, 255);
 				if (polling) {
 					showPollingMessage();
 				}

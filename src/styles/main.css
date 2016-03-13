@@ -88,6 +88,11 @@ textarea {
     max-height: 600px;
 }
 
+article {
+    width: 640px;
+    margin: 0 auto;
+}
+
 .cta {
     text-align: center;
     padding: 0 0 20px 0;

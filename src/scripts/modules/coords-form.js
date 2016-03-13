@@ -3,6 +3,9 @@
 var Forecastio = require('../libs/forecast.io');
 var Lsb = require('./lsb-cnstrctr');
 var Nll = require('./nll-cnstrctr');
+var GooglePlaces = require('google-places');
+var makeRequest = require('./make-request');
+var Promise = require('es6-promise').Promise;
 var postal = require('postal');
 var channel = postal.channel();
 
@@ -10,6 +13,16 @@ module.exports = function() {
 	var coordsSubmitBtn = document.getElementById('form-coords-btn');
 	var useLocBtn = document.getElementById('use-location-btn');
 	var messageBlock = document.getElementById('message-block');
+
+	//get API key here
+	var geocodeKey = makeRequest('GET', '/geocoder-proxy.php');
+	geocodeKey.then(function(data) {
+		alert(data);
+	});
+	
+	function runPlaces() {
+		var places = new GooglePlaces('your_key');
+	}
 
 	function updateApp(lat, long) {
 		var name = 'here';
@@ -32,7 +45,7 @@ module.exports = function() {
 
 	function showForm() {
 		messageBlock.innerHtml = '<p>Geolocation is not supported by your browser</p>' +
-									'<p>Try searching</p>';
+			'<p>Try searching</p>';
 		//TODO
 		//Reveal form in page and use fields
 		var lat = document.getElementById('lat').value;
