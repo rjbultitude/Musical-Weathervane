@@ -36,6 +36,7 @@ dist/
 
 # Backend
 proxy.php
+geocoder-proxy.php
 
 # Others
 sql/
