@@ -34,6 +34,10 @@ module.exports = function() {
 	var staticDataReady = false;
 	var newDataReady = false;
 	var polling = false;
+	var fetchingUsrLoc = false;
+	//String consts
+	var pollingMsgStr = 'Fetching new weather data';
+	var userMsgStr = 'Fetching your weather data';
 
 	/*
 		Ranges to be mapped
@@ -126,24 +130,27 @@ module.exports = function() {
 				formInit();
 			}
 
-			function showPollingMessage() {
-				var rectWidth = 280;
-				var rectHeight = 60;
-				sketch.fill(255, 255, 255, 10);
-				sketch.rect(sketch.width / 2 - rectWidth / 2, 0, rectWidth, rectHeight);
+			function showUserMessage() {
 				sketch.textSize(14);
 				sketch.textAlign(sketch.CENTER);
 				sketch.fill(255, 255, 255);
-				sketch.text('Fetching new weather data', sketch.width / 2, rectHeight / 2);
+				sketch.text(userMsgStr, sketch.width / 2, 30);
+			}
+
+			function showPollingMessage() {
+				sketch.textSize(14);
+				sketch.textAlign(sketch.CENTER);
+				sketch.fill(255, 255, 255);
+				sketch.text(pollingMsgStr, sketch.width / 2, 30);
 			}
 
 			function formInit() {
 				coordsForm();
-				channel.subscribe('formUpdate', function(data) {
-					console.log('data from form', data);
-					// locationsData[1].newBearing = data.bearing;
-					// locationsData[1].newSpeed = data.speed;
-					// locationsData[1].newName = data.name;
+				channel.subscribe('fetchingUserLoc', function() {
+					fetchingUsrLoc = true;
+				});
+				channel.subscribe('userUpdate', function(data) {
+					// console.log('data from form', data);
 					updateSingleLoc(data);
 				});
 			}
@@ -212,6 +219,7 @@ module.exports = function() {
 				pitchDiffArr.push(locationsData[1].pitchDiff);
 				locationsData[1].shapeDiff = Math.abs(locationsData[1].radius - locationsData[1].newRadius);
 				locationsData[1].incAmt = locationsData[1].pitchDiff / factor;
+				fetchingUsrLoc = false;
 			}
 
 			function updateLocData(newData) {
@@ -334,7 +342,7 @@ module.exports = function() {
 				var horizDiv = sketch.width / numKeys;
 				var horizOffset = horizDiv / 2;
 				for (var i = 0; i < numKeys; i++) {
-					var newLocationObj = new LocationObj(locationsData[i].speed, locationsData[i].bearing, locationsData[i].pitch, locationsData[i].volume, locationsData[i].newPitch, locationsData[i].newVolume, locationsData[i].pitchDiff, locationsData[i].incAmt, locationsData[i].name, locationsData[i].radius, (horizDiv * i) + horizOffset, sketch.height / 2, locationsData[i].sound);
+					var newLocationObj = new LocationObj(locationsData[i].speed, locationsData[i].bearing, locationsData[i].pitch, locationsData[i].volume, locationsData[i].newPitch, locationsData[i].newVolume, locationsData[i].pitchDiff, locationsData[i].incAmt, locationsData[i].name, locationsData[i].radius, (horizDiv * i) + horizOffset, sketch.height/2 - 40, locationsData[i].sound);
 					finalLocsArr[i] = newLocationObj;
 				}
 				return finalLocsArr;
@@ -342,7 +350,7 @@ module.exports = function() {
 
 			sketch.setup = function setup() {
 				//Canvas setup
-				var myCanvas = sketch.createCanvas(800, 500);
+				var myCanvas = sketch.createCanvas(800, 400);
 				myCanvas.parent('canvas-container');
 				sketch.frameRate(25);
 				//init sounds
@@ -353,8 +361,11 @@ module.exports = function() {
 
 			sketch.draw = function draw() {
 				sketch.background(0, 0, 0);
-				if (polling === true) {
+				if (polling) {
 					showPollingMessage();
+				}
+				if (fetchingUsrLoc) {
+					showUserMessage();
 				}
 				paintUpdateLoop:
 					for (var i = 0; i < locationsData.length; i++) {

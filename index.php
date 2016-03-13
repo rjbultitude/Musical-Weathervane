@@ -17,16 +17,26 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <main aria-role="main" class="wrapper">
-            <p>Inspired by the Croatian sea organ this app consumes real-time weather data and generates music using wind direction and speed</p>
+        <article>
+            <h1>Musical Weathevane</h1>
+            <p>The musical wearthervane makes music from weather across the globe. Three locations have been randomly picked to produce a chord using the local wind speed and bearing.</p>
+            <div class="cta">
+                <p>Play the sound of your location too:</p>
+                <button id="use-location-btn">Use my location</button>
+            </div>
+        </article>
+            <div id="message-block"></div>
             <div id="canvas-container">
             </div>
-            <form id="form-coords">
-                <label for="lat">Lattiude</label>
-                <input type="text" id="lat">
-                <label for="long">Longitude</label>
-                <input type="text" id="long">
-                <button id="submit">Submit</button>
-            </form>
+            <div style="display: none">
+                <form id="form-coords">
+                    <label for="lat">Lattiude</label>
+                    <input type="text" id="lat">
+                    <label for="long">Longitude</label>
+                    <input type="text" id="long">
+                    <button id="form-coords-btn">Submit</button>
+                </form>
+            </div>
         </main>
         <script src="dist/scripts/app.js"></script>
     </body>
