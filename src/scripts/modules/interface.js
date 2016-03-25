@@ -181,7 +181,7 @@ module.exports = function() {
 							//If all of the above were true do nothing
 							//if not continue with app
 						if (dataMatch === false) {
-							compareData(newLocationData);
+							//compareData(newLocationData);
 						}
 					});
 				}, pollInterval);

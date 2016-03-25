@@ -3,7 +3,7 @@
 var Forecastio = require('../libs/forecast.io');
 var Lsb = require('./lsb-cnstrctr');
 var Nll = require('./nll-cnstrctr');
-var GooglePlaces = require('google-places');
+var GoogleMapsLoader = require('google-maps');
 var makeRequest = require('./make-request');
 var Promise = require('es6-promise').Promise;
 var postal = require('postal');
@@ -14,14 +14,46 @@ module.exports = function() {
 	var useLocBtn = document.getElementById('use-location-btn');
 	var messageBlock = document.getElementById('message-block');
 
-	//get API key here
-	var geocodeKey = makeRequest('GET', '/geocoder-proxy.php');
-	geocodeKey.then(function(data) {
-		alert(data);
-	});
-	
-	function runPlaces() {
-		var places = new GooglePlaces('your_key');
+	function getPlaces(lat, long) {
+		var gpKey = makeRequest('GET', '/gm-key.php');
+		gpKey.then(function(key) {
+			GoogleMapsLoader.KEY = key;
+			GoogleMapsLoader.load(function(google) {
+				console.log(google);
+				var geocoder = new google.maps.Geocoder();
+				var map = new google.maps.Map(document.getElementById('map'), {
+					zoom: 8,
+					center: {
+						lat: lat,
+						lng: long
+					}
+				});
+				var latlng = new google.maps.LatLng(lat, long);
+
+				geocoder.geocode({
+						'latLng': latlng
+					},
+					function(results, status) {
+						if (status === google.maps.GeocoderStatus.OK) {
+							if (results[0]) {
+								var add = results[0].formatted_address;
+								var value = add.split(',');
+
+								var count = value.length;
+								//var country = value[count - 1];
+								//var state = value[count - 2];
+								var city = value[count - 3];
+								console.log('city name is: ' + city);
+							} else {
+								console.log('address not found');
+							}
+						} else {
+							console.log('Geocoder failed due to: ' + status);
+						}
+					}
+				);
+			});
+		});
 	}
 
 	function updateApp(lat, long) {
@@ -50,7 +82,7 @@ module.exports = function() {
 		//Reveal form in page and use fields
 		var lat = document.getElementById('lat').value;
 		var long = document.getElementById('long').value;
-		updateApp();
+		updateApp(lat, long);
 	}
 
 	function getGeo() {
@@ -60,7 +92,8 @@ module.exports = function() {
 		}
 
 		function success(position) {
-			updateApp(position.coords.latitude, position.coords.longitude);
+			//updateApp(position.coords.latitude, position.coords.longitude);
+			getPlaces(position.coords.latitude, position.coords.longitude);
 		}
 
 		function error() {
