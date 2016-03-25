@@ -19,21 +19,21 @@ module.exports = function() {
 		gpKey.then(function(key) {
 			GoogleMapsLoader.KEY = key;
 			GoogleMapsLoader.load(function(google) {
-				console.log(google);
 				var geocoder = new google.maps.Geocoder();
-				var map = new google.maps.Map(document.getElementById('map'), {
-					zoom: 8,
-					center: {
-						lat: lat,
-						lng: long
-					}
-				});
+				// var map = new google.maps.Map(document.getElementById('map'), {
+				// 	zoom: 8,
+				// 	center: {
+				// 		lat: lat,
+				// 		lng: long
+				// 	}
+				// });
 				var latlng = new google.maps.LatLng(lat, long);
 
 				geocoder.geocode({
 						'latLng': latlng
 					},
 					function(results, status) {
+						var city = 'Your location';
 						if (status === google.maps.GeocoderStatus.OK) {
 							if (results[0]) {
 								var add = results[0].formatted_address;
@@ -43,14 +43,14 @@ module.exports = function() {
 								//var country = value[count - 1];
 								//var state = value[count - 2];
 								var city = value[count - 3];
-								console.log('city name is: ' + city);
-								updateApp(lat, long, city);
 							} else {
 								console.log('address not found');
 							}
-						} else {
+						} 
+						else {
 							console.log('Geocoder failed due to: ' + status);
 						}
+						updateApp(lat, long, city);
 					}
 				);
 			});
