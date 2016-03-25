@@ -28,15 +28,13 @@
             <div id="message-block"></div>
             <div id="canvas-container">
             </div>
-            <div style="display: none">
-                <form id="form-coords">
-                    <label for="lat">Lattiude</label>
-                    <input type="text" id="lat">
-                    <label for="long">Longitude</label>
-                    <input type="text" id="long">
-                    <button id="form-coords-btn">Submit</button>
-                </form>
-            </div>
+            <form id="form-coords" style="display: none">
+                <label for="lat">Lattiude</label>
+                <input type="text" id="lat">
+                <label for="long">Longitude</label>
+                <input type="text" id="long">
+                <button id="form-coords-btn">Submit</button>
+            </form>
         </main>
         <script src="dist/scripts/app.js"></script>
     </body>

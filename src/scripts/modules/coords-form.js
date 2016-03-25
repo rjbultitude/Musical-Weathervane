@@ -59,7 +59,6 @@ module.exports = function() {
 				var bearing = conditions[0].getWindBearing();
 				//TODO get correct name
 				var name = newLocation.name;
-				console.log('name', name);
 				var locSpeedBearing = new Lsb(speed, bearing, name);
 				channel.publish('userUpdate', locSpeedBearing);
 			}
@@ -69,11 +68,16 @@ module.exports = function() {
 	function showForm() {
 		messageBlock.innerHtml = '<p>Geolocation is not supported by your browser</p>' +
 			'<p>Try searching</p>';
-		//TODO
-		//Reveal form in page and use fields
+		var formEl = document.getElementById('form-coords');
+		formEl.style.display = 'block';
 		var lat = document.getElementById('lat').value;
 		var long = document.getElementById('long').value;
-		updateApp(lat, long);
+		if (typeof lat !== number || typeof long !== number) {
+			messageBlock.innerHtml = 'please enter a number';
+		}
+		else {
+			updateApp(lat, long);
+		}
 	}
 
 	function getGeo() {
@@ -83,7 +87,6 @@ module.exports = function() {
 		}
 
 		function success(position) {
-			//updateApp(position.coords.latitude, position.coords.longitude);
 			getPlaces(position.coords.latitude, position.coords.longitude);
 		}
 
