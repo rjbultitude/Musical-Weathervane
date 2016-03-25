@@ -20,13 +20,6 @@ module.exports = function() {
 			GoogleMapsLoader.KEY = key;
 			GoogleMapsLoader.load(function(google) {
 				var geocoder = new google.maps.Geocoder();
-				// var map = new google.maps.Map(document.getElementById('map'), {
-				// 	zoom: 8,
-				// 	center: {
-				// 		lat: lat,
-				// 		lng: long
-				// 	}
-				// });
 				var latlng = new google.maps.LatLng(lat, long);
 
 				geocoder.geocode({
@@ -38,10 +31,7 @@ module.exports = function() {
 							if (results[0]) {
 								var add = results[0].formatted_address;
 								var value = add.split(',');
-
 								var count = value.length;
-								//var country = value[count - 1];
-								//var state = value[count - 2];
 								var city = value[count - 3];
 							} else {
 								console.log('address not found');

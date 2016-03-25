@@ -37,7 +37,6 @@
                     <button id="form-coords-btn">Submit</button>
                 </form>
             </div>
-            <div id="map"></div>
         </main>
         <script src="dist/scripts/app.js"></script>
     </body>
