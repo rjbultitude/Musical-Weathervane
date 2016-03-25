@@ -44,6 +44,7 @@ module.exports = function() {
 								//var state = value[count - 2];
 								var city = value[count - 3];
 								console.log('city name is: ' + city);
+								updateApp(lat, long, city);
 							} else {
 								console.log('address not found');
 							}
@@ -56,8 +57,7 @@ module.exports = function() {
 		});
 	}
 
-	function updateApp(lat, long) {
-		var name = 'here';
+	function updateApp(lat, long, name) {
 		var newLocation = new Nll(lat, long, name);
 		var forecast = new Forecastio({
 			PROXY_SCRIPT: '/proxy.php'
@@ -68,7 +68,8 @@ module.exports = function() {
 				var speed = conditions[0].getWindSpeed();
 				var bearing = conditions[0].getWindBearing();
 				//TODO get correct name
-				var name = 'Here';
+				var name = newLocation.name;
+				console.log('name', name);
 				var locSpeedBearing = new Lsb(speed, bearing, name);
 				channel.publish('userUpdate', locSpeedBearing);
 			}
