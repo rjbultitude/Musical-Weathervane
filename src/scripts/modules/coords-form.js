@@ -29,16 +29,20 @@ module.exports = function() {
 						var locName = 'Your location';
 						if (status === google.maps.GeocoderStatus.OK) {
 							if (results[0]) {
-								console.log('results', results);
-								//var add = results[0].formatted_address;
-								//var value = add.split(',');
-								//var count = value.length;
-								//var firstLine = value[count - 3];
-								//var cityPc = value[count - 2];
-								var cityPc = results[1].formatted_address;
-								//var cityArr = cityPc.split(',');
-								//var city = cityArr[0];
-								var locName = cityPc;
+								//See if there's a city & country
+								if (results[1]) {
+									var cityCountry = results[1].formatted_address;
+									var locName = cityCountry;
+									//else use the city & postcode
+								} else {
+									var add = results[0].formatted_address;
+									var value = add.split(',');
+									var count = value.length;
+									var cityPc = value[count - 2];
+									var cityArr = cityPc.split(',');
+									var city = cityArr[0];
+									var locName = city;
+								}
 							} else {
 								console.log('address not found');
 							}
