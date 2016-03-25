@@ -26,13 +26,19 @@ module.exports = function() {
 						'latLng': latlng
 					},
 					function(results, status) {
-						var city = 'Your location';
+						var locName = 'Your location';
 						if (status === google.maps.GeocoderStatus.OK) {
 							if (results[0]) {
-								var add = results[0].formatted_address;
-								var value = add.split(',');
-								var count = value.length;
-								var city = value[count - 3];
+								console.log('results', results);
+								//var add = results[0].formatted_address;
+								//var value = add.split(',');
+								//var count = value.length;
+								//var firstLine = value[count - 3];
+								//var cityPc = value[count - 2];
+								var cityPc = results[1].formatted_address;
+								//var cityArr = cityPc.split(',');
+								//var city = cityArr[0];
+								var locName = cityPc;
 							} else {
 								console.log('address not found');
 							}
@@ -40,7 +46,7 @@ module.exports = function() {
 						else {
 							console.log('Geocoder failed due to: ' + status);
 						}
-						updateApp(lat, long, city);
+						updateApp(lat, long, locName);
 					}
 				);
 			});

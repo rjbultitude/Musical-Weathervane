@@ -2,17 +2,17 @@
 
 module.exports = [
 	{	
-		name: 'brixton',
+		name: 'Brixton, UK',
 		latitude: '51.461279',
 		longitude: '-0.115615'
 	},
 	{	
-		name: 'birkenhead',
+		name: 'Birkenhead, UK',
 		latitude: '53.389991',
 		longitude: '-3.023009'
 	},
 	{
-		name: 'bradford',
+		name: 'Bradford, UK',
 		latitude: '53.795984',
 		longitude: '-1.759398'
 	}
