@@ -55,12 +55,13 @@ module.exports = function() {
 	var volumeMin = 0.1;
 	var volumeMax = 1.0;
 	//Shape size
-	var radiusMin = 10;
+	var radiusMin = 40;
 	var radiusMax = 100;
+	var lowerTextPos = radiusMax + 36;
 	//Pitch diffs global
 	var pitchDiffArr = [];
 	//line length
-	var bearingLineLength = 40;
+	var bearingLineLength = 100;
 
 	//Get initial dataset
 	loadJSON('/data/static-data.json',
@@ -281,10 +282,10 @@ module.exports = function() {
 				sketch.noStroke();
 				sketch.fill(0, 0, 0, 255);
 				sketch.text(this.name, this.xPos, this.yPos - radiusMax);
-				sketch.text('Speed', this.xPos, this.yPos + radiusMax);
-				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + radiusMax + radiusMax/4);
-				sketch.text('Bearing', this.xPos, this.yPos + radiusMax + radiusMax/2);
-				sketch.text(this.bearing, this.xPos, this.yPos + radiusMax + (radiusMax/4 * 3));
+				sketch.text('Speed', this.xPos, this.yPos + lowerTextPos);
+				sketch.text(this.radius.toFixed(2), this.xPos, this.yPos + lowerTextPos + radiusMax/4);
+				sketch.text('Bearing', this.xPos, this.yPos + lowerTextPos + radiusMax/2);
+				sketch.text(this.bearing, this.xPos, this.yPos + lowerTextPos + (radiusMax/4 * 3));
 			};
 
 			LocationObj.prototype.shapeUpdate = function() {
