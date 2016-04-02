@@ -267,7 +267,7 @@ module.exports = function() {
 				sketch.fill(0, 0, 0, 100);
 				sketch.ellipse(this.xPos, this.yPos, this.radius, this.radius);
 				sketch.stroke(0, 0, 0);
-				sketch.line(this.xPos, this.yPos, this.xPos + (sketch.sin(this.bearing / sketch.TWO_PI) * bearingLineLength), this.yPos + (sketch.cos(this.bearing / sketch.TWO_PI)) * bearingLineLength);
+				sketch.line(this.xPos, this.yPos, this.xPos + (sketch.sin(sketch.radians(this.bearing)) * bearingLineLength), this.yPos + (sketch.cos(sketch.radians(this.bearing)) * bearingLineLength);
 				sketch.textSize(18);
 				sketch.textAlign(sketch.CENTER);
 				sketch.noStroke();
