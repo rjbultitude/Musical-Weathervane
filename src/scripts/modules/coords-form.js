@@ -50,15 +50,22 @@ module.exports = function() {
 						else {
 							console.log('Geocoder failed due to: ' + status);
 						}
+						messageBlock.innerHTML = '';
 						updateApp(lat, long, locName);
 					}
 				);
 			});
+		}, function(rejectObj) {
+			console.log(rejectObj.status);
+			console.log(rejectObj.statusText);
+			messageBlock.innerHTML = 'Error getting your location';
+			updateApp(lat, long, 'unknown');
 		});
 	}
 
 	function updateApp(lat, long, name) {
 		var newLocation = new Nll(lat, long, name);
+		messageBlock.innerHTML = 'Fetching weather data';
 		var forecast = new Forecastio({
 			PROXY_SCRIPT: '/proxy.php'
 		});
@@ -76,14 +83,14 @@ module.exports = function() {
 	}
 
 	function showForm() {
-		messageBlock.innerHtml = '<p>Geolocation is not supported by your browser</p>' +
-			'<p>Try searching</p>';
+		messageBlock.innerHTML = 'Geolocation is not supported by your browser \n' +
+			'Try searching';
 		var formEl = document.getElementById('form-coords');
 		formEl.style.display = 'block';
 		var lat = document.getElementById('lat').value;
 		var long = document.getElementById('long').value;
 		if (typeof lat !== number || typeof long !== number) {
-			messageBlock.innerHtml = 'please enter a number';
+			messageBlock.innerHTML = 'please enter a number';
 		}
 		else {
 			updateApp(lat, long);
@@ -97,10 +104,13 @@ module.exports = function() {
 		}
 
 		function success(position) {
+			messageBlock.innerHTML = 'Looking up name';
 			getPlaces(position.coords.latitude, position.coords.longitude);
 		}
 
 		function error() {
+			messageBlock.innerHTML = 'Unable to retrieve your location \n' +
+			'Try again in a minute';
 			console.log('Unable to retrieve your location');
 		}
 
@@ -109,7 +119,7 @@ module.exports = function() {
 
 	useLocBtn.addEventListener('click', function(e) {
 		e.preventDefault();
-		channel.publish('fetchingUserLoc', null);
+		messageBlock.innerHTML = 'Getting your location';
 		getGeo();
 	});
 };

@@ -20,12 +20,12 @@
         <article>
             <h1>Musical Weathevane</h1>
             <p>The musical wearthervane makes music from weather across the globe. Three locations have been randomly picked to produce a chord using the local wind speed and bearing.</p>
-            <div class="cta">
+            <div class="cta inactive" id="cta-user-location">
                 <p>Play the sound of your location too:</p>
                 <button id="use-location-btn">Use my location</button>
             </div>
         </article>
-            <div id="message-block"></div>
+            <p id="message-block" class="status-bar">Loading</p>
             <div id="canvas-container">
             </div>
             <form id="form-coords" style="display: none">

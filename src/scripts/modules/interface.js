@@ -38,6 +38,9 @@ module.exports = function() {
 	//String consts
 	var pollingMsgStr = 'Fetching new weather data';
 	var userMsgStr = 'Fetching your weather data';
+	//Els
+	var ctaUsr = document.getElementById('cta-user-location');
+	var messageBlock = document.getElementById('message-block');
 
 	/*
 		Ranges to be mapped
@@ -131,27 +134,14 @@ module.exports = function() {
 				formInit();
 			}
 
-			function showUserMessage() {
-				sketch.textSize(14);
-				sketch.textAlign(sketch.CENTER);
-				sketch.fill(0, 0, 0);
-				sketch.text(userMsgStr, sketch.width / 2, 30);
-			}
-
 			function showPollingMessage() {
-				sketch.textSize(14);
-				sketch.textAlign(sketch.CENTER);
-				sketch.fill(0, 0, 0);
-				sketch.text(pollingMsgStr, sketch.width / 2, 30);
+				messageBlock.innerHTML = pollingMsgStr;
 			}
 
 			function formInit() {
 				coordsForm();
-				channel.subscribe('fetchingUserLoc', function() {
-					fetchingUsrLoc = true;
-				});
 				channel.subscribe('userUpdate', function(data) {
-					// console.log('data from form', data);
+					messageBlock.innerHTML = 'Success';
 					updateSingleLoc(data);
 				});
 			}
@@ -251,6 +241,7 @@ module.exports = function() {
 				polling = false;
 				newDataReady = true;
 				staticDataReady = false;
+				ctaUsr.classList.remove('inactive');
 			}
 
 			//Location Class
@@ -364,9 +355,6 @@ module.exports = function() {
 				sketch.background(255, 255, 255);
 				if (polling) {
 					showPollingMessage();
-				}
-				if (fetchingUsrLoc) {
-					showUserMessage();
 				}
 				paintUpdateLoop:
 					for (var i = 0; i < locationsData.length; i++) {
