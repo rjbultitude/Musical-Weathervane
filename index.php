@@ -29,6 +29,7 @@
             <div id="canvas-container">
             </div>
             <form id="form-coords" style="display: none">
+                <h2>Enter your coordinates</h2>
                 <label for="lat">Lattiude</label>
                 <input type="text" id="lat">
                 <label for="long">Longitude</label>
@@ -36,6 +37,14 @@
                 <button id="form-coords-btn">Submit</button>
             </form>
         </main>
+        <footer>
+            <h2>Credits</h2>
+            <p>This project uses <a href="http://forecast.io/">Forecast.io</a> to obtain the weather data.</p>
+            <p>The JavaScript library used to access the API can be found on <a href="https://github.com/iantearle/forecast.io-javascript-api">GitHub here</a>.</p>
+            <p><a href="http://p5js.org/">P5.js</a> is used to generate the graphical interface and audio.</p>
+            <p><a href="https://www.google.com/intx/en_uk/work/mapsearth/products/mapsapi.html">Google maps</a> is used to reverse Geocode the location information</p>
+            <p>Musical Weathervane is written and maintained by <a href="https://github.com/rjbultitude">R.Bultitude</a></p>
+        </footer>
         <script src="dist/scripts/app.js"></script>
     </body>
 </html>
