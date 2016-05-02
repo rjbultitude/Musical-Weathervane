@@ -5,7 +5,7 @@
 	Each location's properties are used to inform the shape of the sounds
 	Wind bearing is mapped to used for the pitch
 	Wind speed for volume
-	
+
 	When new data is loaded the pitch of each note is retuned
 	This is done by ensuring the loop is re-entered after each pass of all three objects
 	However it relies on a for loop, which is run at the speed of the client's computer
@@ -204,7 +204,7 @@ module.exports = function() {
 				var newRadiusNum = sketch.map(Math.round(locationsData[1].newSpeed), speedMin, speedMax, radiusMin, radiusMax);
 				locationsData[1].newRadius = Math.round(newRadiusNum);
 
-				//calculate differences 
+				//calculate differences
 				//and ensure it's a positive number
 				locationsData[1].pitchDiff = Math.abs(locationsData[1].pitch - locationsData[1].newPitch);
 				pitchDiffArr.push(locationsData[1].pitchDiff);
@@ -228,7 +228,7 @@ module.exports = function() {
 						var newRadiusNum = sketch.map(Math.round(locationsData[loc].newSpeed), speedMin, speedMax, radiusMin, radiusMax);
 						locationsData[loc].newRadius = Math.round(newRadiusNum);
 
-						//calculate differences 
+						//calculate differences
 						//and ensure it's a positive number
 						locationsData[loc].pitchDiff = Math.abs(locationsData[loc].pitch - locationsData[loc].newPitch);
 						pitchDiffArr.push(locationsData[loc].pitchDiff);
@@ -267,7 +267,7 @@ module.exports = function() {
 				sketch.fill(0, 0, 0, 100);
 				sketch.ellipse(this.xPos, this.yPos, this.radius, this.radius);
 				sketch.stroke(0, 0, 0);
-				sketch.line(this.xPos, this.yPos, this.xPos + (sketch.sin(sketch.radians(this.bearing)) * bearingLineLength), this.yPos + (sketch.cos(sketch.radians(this.bearing)) * bearingLineLength);
+				sketch.line(this.xPos, this.yPos, this.xPos + (sketch.sin(sketch.radians(this.bearing)) * bearingLineLength), this.yPos + (sketch.cos(sketch.radians(this.bearing)) * bearingLineLength));
 				sketch.textSize(18);
 				sketch.textAlign(sketch.CENTER);
 				sketch.noStroke();
