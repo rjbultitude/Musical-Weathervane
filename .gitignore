@@ -35,6 +35,8 @@ src/styles/css/
 dist/
 
 # Backend
+gm-key.php
+gp-key.php
 proxy.php
 
 # Others
